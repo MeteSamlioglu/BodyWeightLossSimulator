@@ -53,6 +53,7 @@ function App() {
       // *   - net.segmentMultiPerson
       // *   - net.segmentMultiPersonParts
       // const person = await net.segmentPerson(video);
+      
       const person = await net.segmentPersonParts(video);
       console.log(person);
 
