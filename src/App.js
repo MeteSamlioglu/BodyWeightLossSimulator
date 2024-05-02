@@ -1,87 +1,63 @@
-// 1. Install dependencies
-// 2. Import dependencies
-// 3. Setup webcam and canvas
-// 4. Define references to those
-// 5. Load handpose
-// 6. Detect function
-// 7. Draw using drawMask
-
-import React, { useRef } from "react";
-// import logo from './logo.svg';
+import React, { useRef, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
 import * as bodyPix from "@tensorflow-models/body-pix";
-import Webcam from "react-webcam";
 import "./App.css";
 
 function App() {
-  const webcamRef = useRef(null);
+  const imageRef = useRef(null);
   const canvasRef = useRef(null);
 
   const runBodysegment = async () => {
     const net = await bodyPix.load();
     console.log("BodyPix model loaded.");
-    //  Loop and detect hands
-    setInterval(() => {
-      detect(net);
-    }, 100);
+    detect(net);
   };
 
   const detect = async (net) => {
-    // Check data is available
-    if (
-      typeof webcamRef.current !== "undefined" &&
-      webcamRef.current !== null &&
-      webcamRef.current.video.readyState === 4
-    ) {
-      // Get Video Properties
-      const video = webcamRef.current.video;
-      const videoWidth = webcamRef.current.video.videoWidth;
-      const videoHeight = webcamRef.current.video.videoHeight;
-
-      // Set video width
-      webcamRef.current.video.width = videoWidth;
-      webcamRef.current.video.height = videoHeight;
+    if (imageRef.current) {
+      const image = imageRef.current;
+      const imageWidth = image.width;
+      const imageHeight = image.height;
 
       // Set canvas height and width
-      canvasRef.current.width = videoWidth;
-      canvasRef.current.height = videoHeight;
+      canvasRef.current.width = imageWidth;
+      canvasRef.current.height = imageHeight;
+      console.log(imageWidth)
+      console.log(imageHeight)
+      // Make detections
+      const person = await net.segmentPersonParts(image);
+      console.log(person.allPoses);
 
-      // Make Detections
-      // * One of (see documentation below):
-      // *   - net.segmentPerson
-      // *   - net.segmentPersonParts
-      // *   - net.segmentMultiPerson
-      // *   - net.segmentMultiPersonParts
-      // const person = await net.segmentPerson(video);
-      
-      const person = await net.segmentPersonParts(video);
-      console.log(person);
+      // Visualization code
+      const coloredPartImage = bodyPix.toColoredPartMask(person);
+      const opacity = 0.7;
+      const flipHorizontal = false;
+      const maskBlurAmount = 0;
+      const canvas = canvasRef.current;
 
-      // const coloredPartImage = bodyPix.toMask(person);
-      // const coloredPartImage = bodyPix.toColoredPartMask(person);
-      // const opacity = 0.7;
-      // const flipHorizontal = false;
-      // const maskBlurAmount = 0;
-      // const canvas = canvasRef.current;
-
-      // bodyPix.drawMask(
-      //   canvas,
-      //   video,
-      //   coloredPartImage,
-      //   opacity,
-      //   maskBlurAmount,
-      //   flipHorizontal
-      // );
+      bodyPix.drawMask(
+        canvas,
+        image,
+        coloredPartImage,
+        opacity,
+        maskBlurAmount,
+        flipHorizontal
+      );
     }
   };
 
-  runBodysegment();
+  useEffect(() => {
+    runBodysegment();
+  }, []);
 
   return (
     <div className="App">
       <header className="App-header">
-        <Webcam
-          ref={webcamRef}
+        <img
+          ref={imageRef}
+          src="sample.png"
+          alt="Sample"
+          onLoad={() => runBodysegment()}
           style={{
             position: "absolute",
             marginLeft: "auto",
@@ -90,11 +66,10 @@ function App() {
             right: 0,
             textAlign: "center",
             zindex: 9,
-            width: 640,
-            height: 480,
+            maxWidth: "100%",
+            maxHeight: "100%",
           }}
         />
-
         <canvas
           ref={canvasRef}
           style={{
@@ -105,8 +80,6 @@ function App() {
             right: 0,
             textAlign: "center",
             zindex: 9,
-            width: 640,
-            height: 480,
           }}
         />
       </header>
@@ -114,4 +87,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;
