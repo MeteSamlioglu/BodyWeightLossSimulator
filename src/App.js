@@ -38,7 +38,14 @@ function App() {
 
     // Make detections
     const person = await net.segmentPersonParts(image);
-    console.log(person.allPoses);
+    console.log(person);
+    
+    // const torsoMask = person.data.map(value => value === 0 ? 255 : 0); // Creates a binary mask for the torso
+    // const torsoImageData = new ImageData(new Uint8ClampedArray(torsoMask), imageWidth, imageHeight);
+    // const torsoCanvas = document.createElement('canvas');
+    // torsoCanvas.width = imageWidth;
+    // torsoCanvas.height = imageHeight;
+    // torsoCanvas.getContext('2d').putImageData(torsoImageData, 0, 0);
 
     // Visualization code
     const coloredPartImage = bodyPix.toColoredPartMask(person);
