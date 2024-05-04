@@ -10,14 +10,16 @@ class Point:
         self.right_source_x = rightX
         self.right_source_y = rightY
         
-        self.right_destination_x = rightX + epsilonX
-        self.right_destination_y = rightY + epsilonY
+        self.right_destination_x = self.right_source_x + self.epsilon_x
+        self.right_destination_y = self.right_source_y + self.epsilon_y
+        
+        #print(f'source : {self.right_source_x} destination: {self.right_destination_x}')
         
         self.left_source_x = leftX
         self.left_source_y = leftY
         
-        self.left_destination_x = leftX + epsilonX
-        self.left_destination_y = leftY + epsilonY
+        self.left_destination_x = leftX -  epsilonX
+        self.left_destination_y = leftY +  epsilonY
         
     
     def setEpsilonX(self, epsilon_):
@@ -26,13 +28,29 @@ class Point:
     def setEpsilonY(self, epsilon_):
         self.epsilon_y = epsilon_
     
-    def setDestinationAxisX(self):
-        self.right_destination_x += self.right_source_x + self.epsilon_x
-        self.left_destination_x += self.left_source_x - self.epsilon_x
+    # def setDestinationAxisX(self):
+    #     self.right_destination_x = self.right_source_x + self.epsilon_x
+    #     self.left_destination_x = self.left_source_x - self.epsilon_x
     
-    def setDestinationAxisY(self):
-        self.right_destination_y += self.right_source_y - self.epsilon_y
-        self.left_destination_y += self.left_source_y - self.epsilon_y
+    def getSourcePoints(self):
+        
+        """
+            Returns:
+                Returns the source points
+        """
+        return self.right_source_x, self.right_source_y, self.left_source_x, self.left_source_y
+   
+    
+    def getDestinationPoints(self):
+        """
+            Returns:
+                Returns the destination points 
+        """
+        return self.right_destination_x, self.right_destination_y, self.left_destination_x,self.left_destination_y
+    
+    # def setDestinationAxisY(self):
+    #     self.right_destination_y += self.right_source_y - self.epsilon_y
+    #     self.left_destination_y += self.left_source_y - self.epsilon_y
     
     def __repr__(self):
         return f"Point(right x={self.right_source_x}, right y={self.right_source_y}, left x={self.left_source_x}, left y={self.left_source_y} )"
