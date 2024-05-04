@@ -1,4 +1,6 @@
 
+import cv2
+
 class Point:
     def __init__(self, rightX = 0, rightY = 0, leftX = 0, leftY = 0, epsilonX = 0, epsilonY = 0):
         
@@ -21,7 +23,7 @@ class Point:
     def setEpsilonX(self, epsilon_):
         self.epsilon_x = epsilon_
     
-    def setEpsilonX(self, epsilon_):
+    def setEpsilonY(self, epsilon_):
         self.epsilon_y = epsilon_
     
     def setDestinationAxisX(self):
@@ -35,3 +37,5 @@ class Point:
     def __repr__(self):
         return f"Point(right x={self.right_source_x}, right y={self.right_source_y}, left x={self.left_source_x}, left y={self.left_source_y} )"
     
+    # def showAllPoints(self):
+    #     cv2.circle(im, (self.right_shoulder_x, self.right_shoulder_y), 4, (0, 0, 255), -1) 
