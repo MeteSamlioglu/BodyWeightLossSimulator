@@ -2,24 +2,24 @@
 import cv2
 
 class Point:
-    def __init__(self, rightX = 0, rightY = 0, leftX = 0, leftY = 0, epsilonX = 0, epsilonY = 0):
+    def __init__(self, rightX = 0, rightY = 0, leftX = 0, leftY = 0, epsilon = 0):
         
-        self.epsilon_x = epsilonX 
-        self.epsilon_y = epsilonY
+        self.epsilon_x = epsilon 
+        self.epsilon_y = epsilon
         
         self.right_source_x = rightX
         self.right_source_y = rightY
         
         self.right_destination_x = self.right_source_x + self.epsilon_x
-        self.right_destination_y = self.right_source_y + self.epsilon_y
+        self.right_destination_y = self.right_source_y
         
         #print(f'source : {self.right_source_x} destination: {self.right_destination_x}')
         
         self.left_source_x = leftX
         self.left_source_y = leftY
         
-        self.left_destination_x = leftX -  epsilonX
-        self.left_destination_y = leftY +  epsilonY
+        self.left_destination_x = leftX -  epsilon
+        self.left_destination_y = leftY 
         
     
     def setEpsilonX(self, epsilon_):
@@ -47,6 +47,31 @@ class Point:
                 Returns the destination points 
         """
         return self.right_destination_x, self.right_destination_y, self.left_destination_x,self.left_destination_y
+    
+    def setVerticalDestinationPoints(self, vertical_epsilon):
+        """
+        Setting the vertical destination points
+        
+        Args:
+            vertical_epsilon (int): Epsilon for destination point
+        """
+        self.right_destination_y = self.right_source_y + vertical_epsilon
+        
+        self.left_destination_y  = self.left_destination_y + vertical_epsilon
+        
+    def setHorizontalDesinationPoints(self, vertical_epsilon):
+        """
+        Setting the horizontal destination points
+        
+        Args:
+            vertical_epsilon (int): Epsilon for destination point
+        """
+        self.right_destination_x = self.right_source_x + vertical_epsilon
+        
+        self.left_destination_x = self.left_source_x + vertical_epsilon
+    
+    def getEpsilonY(self):
+        return self.epsilon_y
     
     # def setDestinationAxisY(self):
     #     self.right_destination_y += self.right_source_y - self.epsilon_y

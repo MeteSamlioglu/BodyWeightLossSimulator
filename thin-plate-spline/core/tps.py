@@ -68,11 +68,12 @@ def warpPoints(im, Zp, Zs) -> np.array:
     
     new_xy = thin_plate_transform(x=Zp[:, 0], y=Zp[:, 1], offw=3, offh=2, imshape=im.shape[0:2], num_points=4)
     
-    for p in Zs:
-	    cv2.circle(new_im, (p[0], p[1]), r, [255, 0, 0])
+    # for p in Zs:
+	#     cv2.circle(new_im, (p[0], p[1]), r, [255, 0, 0])
 
-    for p in new_pts1:
-        cv2.circle(new_im, (int(p[0]), int(p[1])), 3, [0, 0, 255])
+    # for p in new_pts1:
+    #     cv2.circle(new_im, (int(p[0]), int(p[1])), 3, [0, 0, 255])
+    
     
     cv2.imshow('Warped', new_im)
     cv2.waitKey(0)

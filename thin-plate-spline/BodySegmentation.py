@@ -4,46 +4,46 @@ import os
 from core import Point
 from core import tps
 
-body_parts = {
-    'nose': {'x': 140.37497220298118, 'y': 55.910094292609244},
-    'leftEye': {'x': 147.79016284794773, 'y': 48.112344106038414},
-    'rightEye': {'x' : 127.25704479956813, 'y': 47.50153932990609 },
-    'leftEar': {'x' : 165.67790807679643, 'y': 57.405897827703},
-    'rightEar': {'x' : 114.28676995565726, 'y': 57.06981493396201},
-    'leftShoulder': {'x' : 192.1682789529017, 'y': 120.77464233999288},
-    'rightShoulder': {'x' : 94.3108498920766, 'y': 121.4811002570631},
-    'leftElbow': {'x' : 201.93303669145868, 'y': 196.94535177443927},
-    'rightElbow': {'x' : 83.03741319050161, 'y': 191.2138579721416},
-    'leftWrist': {'x' : 205.09550254289496, 'y': 267.17328204078115},
-    'rightWrist': {'x' : 77.92971506044847, 'y': 254.22849078492806},
-    'leftHip': {'x' : 167.87436809096226, 'y': 261.15734365134887},
-    'rightHip': {'x' : 120.21855589400892, 'y': 249.63132546672892},
-    'leftKnee': {'x' : 170.73546759287518, 'y': 381.0585201633719},
-    'rightKnee': {'x' : 105.185312951258, 'y': 376.1818199122782},
-    'leftAnkle': {'x' : 168.36852695960408, 'y': 491.7963871999538},
-    'rightAnkle': {'x' : 101.11777239714483, 'y': 488.409336907523}
-}
 # body_parts = {
-#     'nose': {'x': 420.58755502194236, 'y': 178.5611058174169},
-#     'leftEye': {'x': 443.9297769482637, 'y': 155.00383722986706},
-#     'rightEye': {'x' : 400.32382274830314, 'y': 154.5108393834273},
-#     'leftEar': {'x' : 484.14493676641524, 'y': 169.86089124694442},
-#     'rightEar': {'x' : 373.1273169814852, 'y': 166.2998638175393},
-#     'leftShoulder': {'x' : 546.6067086777566, 'y': 303.03412830215905},
-#     'rightShoulder': {'x' : 304.9749470682122, 'y': 299.44493342859323},
-#     'leftElbow': {'x' : 630.3275056446947, 'y': 474.6997010503284},
-#     'rightElbow': {'x' : 226.439762177148, 'y': 456.13560834652543},
-#     'leftWrist': {'x' : 549.1664952681191, 'y': 619.3380513168905},
-#     'rightWrist': {'x' : 277.1653803677812, 'y': 623.2991806244515},
-#     'leftHip': {'x' : 525.0838155702411, 'y': 651.4093179970561},
-#     'rightHip': {'x' : 339.0650141365809, 'y': 658.5777996854737},
-#     'leftKnee': {'x' : 548.7685618642847, 'y': 871.7984340864112},
-#     'rightKnee': {'x' : 330.1582183749791, 'y': 893.0001537067097},
-#     'leftAnkle': {'x' : 577.1193602663265, 'y': 1150.7460334557638},
-#     'rightAnkle': {'x' : 309.0422612558061, 'y': 1159.517769210982}
+#     'nose': {'x': 140.37497220298118, 'y': 55.910094292609244},
+#     'leftEye': {'x': 147.79016284794773, 'y': 48.112344106038414},
+#     'rightEye': {'x' : 127.25704479956813, 'y': 47.50153932990609 },
+#     'leftEar': {'x' : 165.67790807679643, 'y': 57.405897827703},
+#     'rightEar': {'x' : 114.28676995565726, 'y': 57.06981493396201},
+#     'leftShoulder': {'x' : 192.1682789529017, 'y': 120.77464233999288},
+#     'rightShoulder': {'x' : 94.3108498920766, 'y': 121.4811002570631},
+#     'leftElbow': {'x' : 201.93303669145868, 'y': 196.94535177443927},
+#     'rightElbow': {'x' : 83.03741319050161, 'y': 191.2138579721416},
+#     'leftWrist': {'x' : 205.09550254289496, 'y': 267.17328204078115},
+#     'rightWrist': {'x' : 77.92971506044847, 'y': 254.22849078492806},
+#     'leftHip': {'x' : 167.87436809096226, 'y': 261.15734365134887},
+#     'rightHip': {'x' : 120.21855589400892, 'y': 249.63132546672892},
+#     'leftKnee': {'x' : 170.73546759287518, 'y': 381.0585201633719},
+#     'rightKnee': {'x' : 105.185312951258, 'y': 376.1818199122782},
+#     'leftAnkle': {'x' : 168.36852695960408, 'y': 491.7963871999538},
+#     'rightAnkle': {'x' : 101.11777239714483, 'y': 488.409336907523}
 # }
+body_parts = {
+    'nose': {'x': 420.58755502194236, 'y': 178.5611058174169},
+    'leftEye': {'x': 443.9297769482637, 'y': 155.00383722986706},
+    'rightEye': {'x' : 400.32382274830314, 'y': 154.5108393834273},
+    'leftEar': {'x' : 484.14493676641524, 'y': 169.86089124694442},
+    'rightEar': {'x' : 373.1273169814852, 'y': 166.2998638175393},
+    'leftShoulder': {'x' : 546.6067086777566, 'y': 303.03412830215905},
+    'rightShoulder': {'x' : 304.9749470682122, 'y': 299.44493342859323},
+    'leftElbow': {'x' : 630.3275056446947, 'y': 474.6997010503284},
+    'rightElbow': {'x' : 226.439762177148, 'y': 456.13560834652543},
+    'leftWrist': {'x' : 549.1664952681191, 'y': 619.3380513168905},
+    'rightWrist': {'x' : 277.1653803677812, 'y': 623.2991806244515},
+    'leftHip': {'x' : 525.0838155702411, 'y': 651.4093179970561},
+    'rightHip': {'x' : 339.0650141365809, 'y': 658.5777996854737},
+    'leftKnee': {'x' : 548.7685618642847, 'y': 871.7984340864112},
+    'rightKnee': {'x' : 330.1582183749791, 'y': 893.0001537067097},
+    'leftAnkle': {'x' : 577.1193602663265, 'y': 1150.7460334557638},
+    'rightAnkle': {'x' : 309.0422612558061, 'y': 1159.517769210982}
+}
 global im
-im = cv2.imread('sample.png')
+im = cv2.imread('sample5.jpg')
 
 if im is None:
     print("Error loading image. Check the file path.")
@@ -166,11 +166,11 @@ class torsoFront:
         Setting all the coordinates of each body part on torseFront
         
         """
-        self.bust = Point(self.right_bust_x, self.right_bust_y, self.left_bust_x, self.left_bust_y, self.epsilon_bust, 0)
-        self.hip  = Point(self.right_hip_x, self.right_hip_y, self.left_hip_x, self.left_hip_y, self.epsilon_hip, 0)
-        self.shoulder = Point(self.right_shoulder_x, self.right_shoulder_y, self.left_shoulder_x, self.left_shoulder_y, self.epsilon_shoulder, 0)
-        self.waist = Point(self.right_waist_x, self.right_waist_y, self.left_waist_x, self.left_waist_y, self.epsilon_waist, 0)
-        self.belly = Point(self.right_belly_x, self.right_belly_y, self.left_belly_x, self.left_belly_y, self.epsilon_belly, 0)
+        self.bust = Point(self.right_bust_x, self.right_bust_y, self.left_bust_x, self.left_bust_y, self.epsilon_bust)
+        self.hip  = Point(self.right_hip_x, self.right_hip_y, self.left_hip_x, self.left_hip_y, self.epsilon_hip)
+        self.shoulder = Point(self.right_shoulder_x, self.right_shoulder_y, self.left_shoulder_x, self.left_shoulder_y, self.epsilon_shoulder)
+        self.waist = Point(self.right_waist_x, self.right_waist_y, self.left_waist_x, self.left_waist_y, self.epsilon_waist)
+        self.belly = Point(self.right_belly_x, self.right_belly_y, self.left_belly_x, self.left_belly_y, self.epsilon_belly)
         
     def get_point_by_part_name(self, part_name,):
         """
@@ -256,7 +256,7 @@ class torsoFront:
         else:
             return None         
         
-    def performHorizontalWarping(self, body_part, step):
+    def performHorizontalWarping(self, body_part, step = 0):
         
         global im
         
@@ -266,6 +266,7 @@ class torsoFront:
         # print('girdim')
         
         right_source_x, right_source_y, left_source_x, left_source_y = points.getSourcePoints()
+        
         right_destination_x, right_destination_y, left_destination_x, left_destination_y = points.getDestinationPoints()
         
         right_source_x, right_source_y = int(right_source_x), int(right_source_y)
@@ -281,52 +282,98 @@ class torsoFront:
             [0, 0], [width, 0], [0, height], [width, width], [right_destination_x, right_destination_y], [left_destination_x, left_destination_y]
         ])
         
+        # print(f'right source {right_source_x} right destination {right_destination_x}')
+        
         im = tps.warpPoints(im, source_points, destination_points)
-    
+        
+        # print(f'right source {right_source_x} right destination {right_destination_x}')
+        
         # cv2.imshow('Warped', im)
         # cv2.waitKey(0)
     
     
-    def performVerticalWarping(self, body_part, step):
+    def performVerticalWarping(self, body_part, step = 0):
         
         global im
         
+        if (body_part != 'belly' and body_part != 'bust'):
+            return #Exception
         
-        right_source_x, right_source_y, left_source_x, left_source_y = points.getSourcePoints()
-        right_destination_x, right_destination_y, left_destination_x, left_destination_y = points.getDestinationPoints()
+        belly_points = self.getBodyPartCoordinates('belly')
+        waist_points = self.getBodyPartCoordinates('waist')
         
-        right_source_x, right_source_y = int(right_source_x), int(right_source_y)
-        left_source_x, left_source_y = int(left_source_x), int(left_source_y)
-        right_destination_x, right_destination_y = int(right_destination_x), int(right_destination_y)
-        left_destination_x, left_destination_y = int(left_destination_x), int(left_destination_y)
+        #Get left and righy belly points
+        belly_epsilon_y = belly_points.getEpsilonY()
+        belly_points.setVerticalDestinationPoints(-(belly_epsilon_y))
+        waist_points.setVerticalDestinationPoints(belly_epsilon_y)
         
+        belly_right_source_x, belly_right_source_y, belly_left_source_x, belly_left_source_y = belly_points.getSourcePoints()
+        belly_right_destination_x, belly_right_destination_y, belly_left_destination_x, belly_left_destination_y = belly_points.getDestinationPoints()
+        
+        belly_right_source_x, belly_right_source_y = int(belly_right_source_x), int(belly_right_source_y)
+        belly_left_source_x, belly_left_source_y = int(belly_left_source_x), int(belly_left_source_y)
+        
+        belly_right_destination_x, belly_right_destination_y = int(belly_right_source_x), int(belly_right_destination_y)
+        belly_left_destination_x, belly_left_destination_y = int(belly_left_source_x), int(belly_left_destination_y)
+        
+        #Get left and right waist belly points
+        waist_right_source_x, waist_right_source_y, waist_left_source_x, waist_left_source_y = waist_points.getSourcePoints()
+        waist_right_destination_x, waist_right_destination_y, waist_left_destination_x, waist_left_destination_y = waist_points.getDestinationPoints()
+        
+        waist_right_source_x, waist_right_source_y = int(waist_right_source_x), int(waist_right_source_y)
+        waist_left_source_x, waist_left_source_y = int(waist_left_source_x), int(waist_left_source_y)
+        
+        waist_right_destination_x, waist_right_destination_y = int(waist_right_source_x), int(waist_right_destination_y)
+        waist_left_destination_x, waist_left_destination_y = int(waist_left_source_x), int(waist_left_destination_y)
+        
+        cv2.circle(im, (belly_right_source_x, belly_right_source_y), 4, (0, 0, 255), -1)           # Show Source Right
+        cv2.circle(im, (belly_left_source_x, belly_left_source_y), 4, (0, 0, 255), -1)             # Show Source Left
+        cv2.circle(im, (belly_right_destination_x, belly_right_destination_y), 4, (255, 0, 0), -1)  # Show Destination Right
+        cv2.circle(im, (belly_left_destination_x, belly_left_destination_y), 4, (255, 0, 0), -1)    # Show Destination Left
+        
+        cv2.circle(im, (waist_right_source_x, waist_right_source_y), 4, (0, 0, 255), -1)           # Show Source Right
+        cv2.circle(im, (waist_left_source_x, waist_left_source_y), 4, (0, 0, 255), -1)             # Show Source Left
+        cv2.circle(im, (waist_right_destination_x, waist_right_destination_y), 4, (255, 0, 0), -1)  # Show Destination Right
+        cv2.circle(im, (waist_left_destination_x, waist_left_destination_y), 4, (255, 0, 0), -1)    # Show Destination Left
+        
+        cv2.imshow('Warped', im)
+        cv2.waitKey(0)
+ 
         source_points = np.array([
             [0, 0], [width, 0], [0, height], [width, width], 
-            [right_source_x, right_source_y], [left_source_x, left_source_y]
+            [belly_right_source_x, belly_right_source_y], [belly_left_source_x, belly_left_source_y],
+            [waist_right_source_x, waist_right_source_y], [waist_left_source_x, waist_left_source_y],
         ])
         destination_points = np.array([
-            [0, 0], [width, 0], [0, height], [width, width], [right_destination_x, right_destination_y], [left_destination_x, left_destination_y]
+            [0, 0], [width, 0], [0, height], [width, width], 
+            [belly_right_destination_x, belly_right_destination_y], [belly_left_destination_x, belly_left_destination_y],
+            [waist_right_destination_x, waist_right_destination_y], [waist_left_destination_x, waist_left_destination_y]
         ])
         
         im = tps.warpPoints(im, source_points, destination_points)
-    
         cv2.imshow('Warped', im)
         cv2.waitKey(0)
  
    
-
         
 if __name__ == "__main__":
     torso = torsoFront()
     #torso.showAllSourcePoints()
-    #torso.performHorizontalWarping()
+    #torso.showWarpingPoints()
     
+    #torso.performVerticalWarping('belly')
+    #torso.performVerticalWarping('belly')
+
+    #torso.performHorizontalWarping('belly')
+    #torso.showWarpingPoints()
+
     torso.performHorizontalWarping('belly', 5)
     torso.performHorizontalWarping('belly', 5)
-    # torso.performHorizontalWarping('belly', 5)
-    # torso.performHorizontalWarping('belly', 5)
-    
-    # torso.performWarping('belly', 5)
-    # torso.performWarping('belly', 5)
-    # torso.performWarping('belly', 5)
+    torso.performHorizontalWarping('belly', 5)
+    torso.performHorizontalWarping('belly', 5)
+    torso.performHorizontalWarping('belly', 5)
+    torso.performHorizontalWarping('belly', 5)
+    torso.performHorizontalWarping('belly', 5)
+    torso.performHorizontalWarping('belly', 5)
+
     
