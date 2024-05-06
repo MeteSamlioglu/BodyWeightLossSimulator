@@ -30,9 +30,17 @@ class Point:
 
         
     def setEpsilonX(self, epsilon_):
+        """
+            Returns:
+                Returns the epsilon on X axi
+        """
         self.epsilon_x = epsilon_
     
     def setEpsilonY(self, epsilon_):
+        """
+            Returns:
+                Returns the epsilon on Y axis
+        """
         self.epsilon_y = epsilon_
     
     # def setDestinationAxisX(self):
@@ -40,14 +48,33 @@ class Point:
     #     self.left_destination_x = self.left_source_x - self.epsilon_x
     
     def getSourcePoints(self):
-        
         """
             Returns:
                 Returns the source points
         """
         return self.right_source_x, self.right_source_y, self.left_source_x, self.left_source_y
    
+    def updateSourcePoints(self):
+        """
+            Updates source points after TPS 
+        """
+        self.right_source_x = self.right_source_x + self.epsilon_x
+        self.right_source_y = self.right_source_y
+        
+        self.left_source_x =   self.left_source_x - self.epsilon_x
+        self.left_source_y =  self.left_source_y
     
+    def updateDestinationPoints(self):
+        """
+            Updates destination points after TPS 
+        """
+        self.right_destination_x = self.right_destination_x + self.epsilon_x
+        self.right_destination_y = self.right_destination_y
+        
+        self.left_destination_x =   self.left_destination_x - self.epsilon_x
+        self.left_destination_y =  self.left_destination_y
+
+
     def getDestinationPoints(self):
         """
             Returns:

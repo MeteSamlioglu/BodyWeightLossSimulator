@@ -5,6 +5,7 @@ from core import Point
 from core import tps
 
 # body_parts = {
+    
 #     'nose': {'x': 140.37497220298118, 'y': 55.910094292609244},
 #     'leftEye': {'x': 147.79016284794773, 'y': 48.112344106038414},
 #     'rightEye': {'x' : 127.25704479956813, 'y': 47.50153932990609 },
@@ -45,9 +46,8 @@ body_parts = {
 }
 
 global im
+
 im = cv2.imread('samples//sample5.jpg')
-
-
 if im is None:
     print("Error loading image. Check the file path.")
     exit(1)
@@ -60,11 +60,8 @@ def show_detected_points(body_parts):
     
     #cv2.imshow('Image with Keypoints', im)
     #cv2.waitKey(0)
-    #cv2.destroyAllWindows()
 
-show_detected_points(body_parts)
-leg_json = body_parts['leftKnee']
-
+# show_detected_points(body_parts)
 height, width = im.shape[:2]
 
 class upperLeg:
@@ -89,24 +86,21 @@ class upperLeg:
         self.hipRight_x = int(body_parts['rightHip']['x'])    # Left Hip's x coordinate
         self.hipRight_y = int(body_parts['rightHip']['y'])    # Left Hip's y coordinate
         
-        self.midX, self.midY = self.findHipsMiddlePoints()
         
-        self.r1, self.r2, self.r3 = self.getRightLegPoints()
-        self.l1, self.l2, self.l3 = self.getLeftLegPoints()
+        self.setHipsMiddlePoints()
+        self.setRightLegPoints()
+        self.setLeftLegPoints()
                 
-        #self.showRightLegPoints()
-        #self.showLeftLegPoints()
   
     
-    def findHipsMiddlePoints(self):
+    def setHipsMiddlePoints(self):
         
-        midX = int((self.hipLeft_x + self.hipRight_x) / 2)
+        self.midX = int((self.hipLeft_x + self.hipRight_x) / 2)
         
-        midY = int((self.hipLeft_y + self.hipRight_y) / 2)
+        self.midY = int((self.hipLeft_y + self.hipRight_y) / 2)
 
-        return midX, midY
         
-    def getRightLegPoints(self):
+    def setRightLegPoints(self):
              
         rightLeg_midX = int((self.hipRight_x + self.rightKnee_x) / 2) 
         rightLeg_midY = int((self.hipRight_y + self.rightKnee_y) / 2)
@@ -129,13 +123,12 @@ class upperLeg:
         rLs3x = rightLeg_midX - (rLs3x_- rightLeg_midX)
         rLs3y = rLs3y_
         
-        p1 = Point(rLs1x, rLs1y, rLs1x_, rLs1y_, self.epsilon_leg)
-        p2 = Point(rLs2x, rLs2y, rLs2x_, rLs2y_, self.epsilon_leg)
-        p3 = Point(rLs3x, rLs3y, rLs3x_, rLs3y_, self.epsilon_leg)
+        self.r1 = Point(rLs1x, rLs1y, rLs1x_, rLs1y_, self.epsilon_leg)
+        self.r2 = Point(rLs2x, rLs2y, rLs2x_, rLs2y_, self.epsilon_leg)
+        self.r3 = Point(rLs3x, rLs3y, rLs3x_, rLs3y_, self.epsilon_leg)
         
-        return p1, p2, p3 
     
-    def getLeftLegPoints(self):
+    def setLeftLegPoints(self):
         
         leftLeg_midX = int((self.hipLeft_x + self.leftKnee_x) / 2) 
         leftLeg_midY = int((self.hipRight_y + self.leftKnee_y) / 2)
@@ -158,11 +151,10 @@ class upperLeg:
         lLs3x_ = leftLeg_midX + (leftLeg_midX - lLs3x)
         lLs3y_ = lLs3y
         
-        p1 = Point(lLs1x, lLs1y, lLs1x_, lLs1y_, self.epsilon_leg)
-        p2 = Point(lLs2x, lLs2y, lLs2x_, lLs2y_, self.epsilon_leg)
-        p3 = Point(lLs3x, lLs3y, lLs3x_, lLs3y_, self.epsilon_leg)
+        self.l1 = Point(lLs1x, lLs1y, lLs1x_, lLs1y_, self.epsilon_leg)
+        self.l2 = Point(lLs2x, lLs2y, lLs2x_, lLs2y_, self.epsilon_leg)
+        self.l3 = Point(lLs3x, lLs3y, lLs3x_, lLs3y_, self.epsilon_leg)
         
-        return p1, p2, p3
         
     def performWarpingRightLeg(self):
         s1x, s1y, s1x_, s1y_ = self.r1.getSourcePoints()
@@ -191,7 +183,14 @@ class upperLeg:
         new_im = tps.warpPoints(self.im_, source_points, destination_points)
         
         self.im_ = new_im                
-
+        
+        self.r1.updateSourcePoints()
+        self.r2.updateSourcePoints()
+        self.r3.updateSourcePoints()
+        
+        self.r1.updateDestinationPoints()
+        self.r2.updateDestinationPoints()
+        self.r3.updateDestinationPoints()
     
     def performWarpingLefttLeg(self):
         
@@ -221,7 +220,15 @@ class upperLeg:
         new_im = tps.warpPoints(self.im_, source_points, destination_points)
         
         self.im_ = new_im                
-    
+        
+        self.l1.updateSourcePoints()
+        self.l2.updateSourcePoints()
+        self.l3.updateSourcePoints()
+        
+        self.l1.updateDestinationPoints()
+        self.l2.updateDestinationPoints()
+        self.l3.updateDestinationPoints()
+
 
     def showRightLegPoints(self):
         
@@ -248,13 +255,16 @@ class upperLeg:
         
 if __name__ == "__main__":
     
-    leftLeg = upperLeg(5, body_parts)
+    leg = upperLeg(5, body_parts)
     
-    leftLeg.showRightLegPoints()
-    
-    leftLeg.performWarpingLefttLeg()
+    leg.showLeftLegPoints()
 
-    leftLeg.showRightLegPoints()
+    leg.performWarpingLefttLeg()
+    leg.performWarpingLefttLeg()
+    leg.performWarpingLefttLeg()
+
+    leg.showLeftLegPoints()
+
 
 
 
