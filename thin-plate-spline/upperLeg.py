@@ -95,12 +95,20 @@ class upperLeg:
     
     def setHipsMiddlePoints(self):
         
+        """
+            Sets middle point of left and right hips.
+        """
+        
         self.midX = int((self.hipLeft_x + self.hipRight_x) / 2)
         
         self.midY = int((self.hipLeft_y + self.hipRight_y) / 2)
 
         
     def setRightLegPoints(self):
+        
+        """
+            Setting Right leg's initial source and destination points
+        """
              
         rightLeg_midX = int((self.hipRight_x + self.rightKnee_x) / 2) 
         rightLeg_midY = int((self.hipRight_y + self.rightKnee_y) / 2)
@@ -130,6 +138,10 @@ class upperLeg:
     
     def setLeftLegPoints(self):
         
+        """
+            Setting Left leg's initial source and destination points
+        """
+        
         leftLeg_midX = int((self.hipLeft_x + self.leftKnee_x) / 2) 
         leftLeg_midY = int((self.hipRight_y + self.leftKnee_y) / 2)
         
@@ -157,6 +169,11 @@ class upperLeg:
         
         
     def performWarpingRightLeg(self):
+        """
+            
+            Performs TPS on right leg
+        
+        """        
         s1x, s1y, s1x_, s1y_ = self.r1.getSourcePoints()
         d1x, d1y, d1x_, d1y_ = self.r1.getDestinationPoints()
         
@@ -191,9 +208,16 @@ class upperLeg:
         self.r1.updateDestinationPoints()
         self.r2.updateDestinationPoints()
         self.r3.updateDestinationPoints()
+
     
     def performWarpingLefttLeg(self):
         
+        """
+            
+            Performs TPS on left leg
+        
+        """
+
         l1x, l1y, l1x_, l1y_ = self.l1.getSourcePoints()
         d1x, d1y, d1x_, d1y_ = self.l1.getDestinationPoints()
         
@@ -229,9 +253,12 @@ class upperLeg:
         self.l2.updateDestinationPoints()
         self.l3.updateDestinationPoints()
 
-
     def showRightLegPoints(self):
-        
+        """
+
+            Displays all the source and destination points on right leg.
+       
+        """
         copy_im = self.im_.copy()
         
         self.r1.drawPoint(copy_im)
@@ -242,6 +269,11 @@ class upperLeg:
         cv2.waitKey(0)
         
     def showLeftLegPoints(self):
+        """
+        
+            Displays all the source and destination points on left leg.
+        
+        """
         
         copy_im = self.im_.copy()
         
@@ -252,23 +284,37 @@ class upperLeg:
         cv2.imshow("Left Leg Points",copy_im)        
         cv2.waitKey(0)
     
+    def setImage(self, im):
+        """
+        
+            Sets image 
+        
+        """
+        self.im_ = im 
+    
+    def getImage(self):
+        """
+            Returns:
+                Returns the image
+        """
+        return self.im_
         
 if __name__ == "__main__":
     
-    leg = upperLeg(5, body_parts)
+    leftLeg = upperLeg(5, body_parts)
+    rightLeg = upperLeg(5, body_parts)
     
-    leg.showLeftLegPoints()
-
-    leg.performWarpingLefttLeg()
-    leg.performWarpingLefttLeg()
-    leg.performWarpingLefttLeg()
-
-    leg.showLeftLegPoints()
-
-
-
-
+    rightLeg.showRightLegPoints()
     
+    rightLeg.performWarpingRightLeg()
+
+    rightLeg.showRightLegPoints()
+    
+    im = rightLeg.getImage()
+    
+    cv2.imwrite('edited.png', im)
+
+
 
 
 
