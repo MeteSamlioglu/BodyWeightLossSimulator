@@ -20,8 +20,15 @@ class Point:
         
         self.left_destination_x = leftX -  epsilon
         self.left_destination_y = leftY 
+
+    def drawPoint(self, im):
+        cv2.circle(im, ( self.right_source_x,   self.right_source_y ), 4, (0, 0, 255), -1) 
+        cv2.circle(im, ( self.right_destination_x, self.right_destination_y ), 4, (255, 0, 0), -1) 
+
+        cv2.circle(im, ( self.left_source_x,   self.left_source_y ), 4, (0, 0, 255), -1) 
+        cv2.circle(im, ( self.left_destination_x,   self.left_destination_y ), 4, (255, 0, 0), -1) 
+
         
-    
     def setEpsilonX(self, epsilon_):
         self.epsilon_x = epsilon_
     

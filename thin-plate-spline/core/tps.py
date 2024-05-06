@@ -74,9 +74,6 @@ def warpPoints(im, Zp, Zs) -> np.array:
     # for p in new_pts1:
     #     cv2.circle(new_im, (int(p[0]), int(p[1])), 3, [0, 0, 255])
     
-    
-    cv2.imshow('Warped', new_im)
-    cv2.waitKey(0)
     return new_im
 
 
