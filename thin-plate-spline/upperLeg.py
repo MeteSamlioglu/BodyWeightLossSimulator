@@ -62,16 +62,16 @@ def show_detected_points(body_parts):
     #cv2.waitKey(0)
 
 # show_detected_points(body_parts)
-height, width = im.shape[:2]
+#height, width = im.shape[:2]
 
 class upperLeg:
     
-    def __init__(self, epsilon_,  body_parts):
+    def __init__(self,im, body_parts, epsilon_):
         
-        global im
         
         self.im_ = im
-        
+        self.height, self.width = im.shape[:2]
+
         self.epsilon_leg = epsilon_
     
         self.rightKnee_x =  int(body_parts['rightKnee']['x']) # Leg Knee's x coordinate
@@ -184,14 +184,14 @@ class upperLeg:
         d3x, d3y, d3x_, d3y_ = self.r3.getDestinationPoints()
         
         source_points = np.array([
-        [0, 0], [width, 0], [0, height], [width, width], 
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
         [s1x, s1y], [s1x_, s1y_],
         [s2x, s2y], [s2x_, s2y_],
         [s3x, s3y], [s3x_, s3y_]
         ])
         
         destination_points = np.array([
-            [0, 0], [width, 0], [0, height], [width, width], 
+            [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
             [d1x, d1y], [d1x_, d1y_],
             [d2x, d2y], [d2x_, d2y_],
             [d3x, d3y], [d3x_, d3y_]
@@ -208,6 +208,7 @@ class upperLeg:
         self.r1.updateDestinationPoints()
         self.r2.updateDestinationPoints()
         self.r3.updateDestinationPoints()
+        cv2.imwrite('edited2.png',  self.im_)
 
     
     def performWarpingLefttLeg(self):
@@ -228,14 +229,14 @@ class upperLeg:
         d3x, d3y, d3x_, d3y_ = self.l3.getDestinationPoints()
         
         source_points = np.array([
-        [0, 0], [width, 0], [0, height], [width, width], 
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
         [l1x, l1y], [l1x_, l1y_],
         [l2x, l2y], [l2x_, l2y_],
         [l3x, l3y], [l3x_, l3y_]
         ])
         
         destination_points = np.array([
-            [0, 0], [width, 0], [0, height], [width, width], 
+            [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
             [d1x, d1y], [d1x_, d1y_],
             [d2x, d2y], [d2x_, d2y_],
             [d3x, d3y], [d3x_, d3y_]
@@ -265,8 +266,7 @@ class upperLeg:
         self.r2.drawPoint(copy_im)
         self.r3.drawPoint(copy_im)
         
-        cv2.imshow("Right Leg Points",copy_im)        
-        cv2.waitKey(0)
+        return copy_im
         
     def showLeftLegPoints(self):
         """
@@ -274,15 +274,28 @@ class upperLeg:
             Displays all the source and destination points on left leg.
         
         """
-        
         copy_im = self.im_.copy()
-        
         self.l1.drawPoint(copy_im)
         self.l2.drawPoint(copy_im)
         self.l3.drawPoint(copy_im)
         
-        cv2.imshow("Left Leg Points",copy_im)        
-        cv2.waitKey(0)
+        return copy_im
+
+    def showAllLegPoints(self):
+        """
+            Returns:
+                Returns all leg points.
+        """
+        copy_im = self.im_.copy()
+        
+        self.r1.drawPoint(copy_im)
+        self.r2.drawPoint(copy_im)
+        self.r3.drawPoint(copy_im)
+        self.l1.drawPoint(copy_im)
+        self.l2.drawPoint(copy_im)
+        self.l3.drawPoint(copy_im)
+        
+        return copy_im
     
     def setImage(self, im):
         """
@@ -301,16 +314,12 @@ class upperLeg:
         
 if __name__ == "__main__":
     
-    leftLeg = upperLeg(5, body_parts)
-    rightLeg = upperLeg(5, body_parts)
-    
-    rightLeg.showRightLegPoints()
-    
+    rightLeg = upperLeg(im, body_parts, 10) # Epsilon Value for weight loss on rightLeg
     rightLeg.performWarpingRightLeg()
 
-    rightLeg.showRightLegPoints()
+    #rightLeg.showRightLegPoints()
     
-    im = rightLeg.getImage()
+    #im = rightLeg.getImage()
     
     cv2.imwrite('edited.png', im)
 

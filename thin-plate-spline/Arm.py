@@ -64,17 +64,18 @@ def show_detected_points(body_parts):
     #cv2.waitKey(0)
 
 # show_detected_points(body_parts)
-height, width = im.shape[:2]
+#height, width = im.shape[:2]
 
 
 class Arm:
 
-    def __init__(self,im_, epsilon_,  body_parts_):
+    def __init__(self, im_, body_parts_, epsilon_):
         
         self.epsilon_arm = epsilon_
         self.body_parts = body_parts_
         self.im_ = im_
-        
+        self.height, self.width = im_.shape[:2]
+
         self.rightShoulder_x =  int( self.body_parts['rightShoulder']['x']) #  rightShoulder's x coordinate
         self.rightShoulder_y = int( self.body_parts['rightShoulder']['y'])  # rightShoulder's y coordinate
         
@@ -135,8 +136,7 @@ class Arm:
         self.r2.drawPoint(copy_im)
         self.r3.drawPoint(copy_im)
         
-        cv2.imshow("Right Arm Points",copy_im)        
-        cv2.waitKey(0)
+        return copy_im
     
     def showLeftArmPoints(self):
         copy_im = self.im_.copy()
@@ -145,8 +145,7 @@ class Arm:
         self.l2.drawPoint(copy_im)
         self.l3.drawPoint(copy_im)
         
-        cv2.imshow("Left Arm Points",copy_im)        
-        cv2.waitKey(0)
+        return copy_im
     
     def showAllArmPoints(self):
         
@@ -160,8 +159,7 @@ class Arm:
         self.l2.drawPoint(copy_im)
         self.l3.drawPoint(copy_im)
         
-        cv2.imshow("Arm Points",copy_im)        
-        cv2.waitKey(0)
+        return copy_im
     
     def setLeftArmPoints(self):
             
@@ -203,14 +201,14 @@ class Arm:
         d3x, d3y, d3x_, d3y_ = self.l3.getDestinationPoints()
         
         source_points = np.array([
-        [0, 0], [width, 0], [0, height], [width, width], 
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
         [l1x, l1y], [l1x_, l1y_],
         [l2x, l2y], [l2x_, l2y_],
         [l3x, l3y], [l3x_, l3y_]
         ])
         
         destination_points = np.array([
-            [0, 0], [width, 0], [0, height], [width, width], 
+            [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
             [d1x, d1y], [d1x_, d1y_],
             [d2x, d2y], [d2x_, d2y_],
             [d3x, d3y], [d3x_, d3y_]
@@ -236,14 +234,14 @@ class Arm:
         d3x, d3y, d3x_, d3y_ = self.r3.getDestinationPoints()
         
         source_points = np.array([
-        [0, 0], [width, 0], [0, height], [width, width], 
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
         [s1x, s1y], [s1x_, s1y_],
         [s2x, s2y], [s2x_, s2y_],
         [s3x, s3y], [s3x_, s3y_]
         ])
         
         destination_points = np.array([
-            [0, 0], [width, 0], [0, height], [width, width], 
+            [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
             [d1x, d1y], [d1x_, d1y_],
             [d2x, d2y], [d2x_, d2y_],
             [d3x, d3y], [d3x_, d3y_]
@@ -279,26 +277,30 @@ class Arm:
     
 if __name__ == "__main__":
     
-    Arms = Arm(im, 5, body_parts)
+    # Arms = Arm(im,body_parts, 5)
+    # #Arms.showAllArmPoints()
     
-    Arms.performWarpingLeftArm()
-    Arms.performWarpingRightArm()
-    
-    im_ = Arms.getImage()
+    # Arms.performWarpingLeftArm()
+    # Arms.performWarpingRightArm()
+    # im_ = Arms.getImage()
 
-    torso = torsoFront(im_, body_parts)
+    torso = torsoFront(im, body_parts)
+    im = torso.performHorizontalWarping('belly', im)
     
+    im = torso.performHorizontalWarping('waist', im)
+
+    cv2.imwrite('edited.png',im)
+
     # torso.showAllSourcePoints()
     
-    torso.performHorizontalWarping('belly')
-    torso.performHorizontalWarping('waist')
+    # torso.performHorizontalWarping('belly')
+    # torso.performHorizontalWarping('waist')
 
 
-    im_ = torso.getImage()
+    # im_ = torso.getImage()
     
-    cv2.imshow("pls",im_)
-    cv2.waitKey(0)
-    cv2.imwrite('edited_photo2.png',im_)
+    # cv2.imshow("pls",im)
+    # cv2.waitKey(0)
 
     # cv2.imshow("pls",im_)
     # cv2.waitKey(0)
