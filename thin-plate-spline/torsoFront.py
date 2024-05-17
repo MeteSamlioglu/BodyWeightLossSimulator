@@ -66,15 +66,15 @@ def show_detected_points(body_parts):
 
 class torsoFront:
 
-    def __init__(self,im_, body_parts_, epsilon_waist_ = 0, epsilon_belly_ = 0, epsilon_bust_ = 0, epsilon_shoulder_ = 0):
+    def __init__(self,im_, body_parts_, epsilon_waist_ = 0, epsilon_belly_ = 0, epsilon_bust_ = 0, epsilon_hip_ = 0):
         
         self.im_ = im_
         self.height, self.width = self.im_.shape[:2]
 
-        self.epsilon_waist = 20
-        self.epsilon_belly = 20
-        self.epsilon_bust = 5
-        self.epsilon_hip = 5
+        self.epsilon_waist = epsilon_waist_
+        self.epsilon_belly = epsilon_belly_
+        self.epsilon_bust = epsilon_bust_
+        self.epsilon_hip = epsilon_hip_
         self.epsilon_shoulder = 5
         
         self.body_parts = body_parts_

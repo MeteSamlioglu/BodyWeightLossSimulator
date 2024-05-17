@@ -65,11 +65,11 @@ class Body:
         self.steps.append(self.curr_im)
         
         self.body_parts = body_parts_ 
-        self.torso = torsoFront(img, self.body_parts, 5, 5, 3, 3) # waist, belly, bust 
+        self.torso = torsoFront(img, self.body_parts, 8, 8, 5, 5) # waist, belly, bust  hip
         self.leftArm = Arm(img, self.body_parts, 2)
         self.rightArm = Arm(img, self.body_parts, 2)
-        self.leftLeg = upperLeg(im, self.body_parts, 5)
-        self.rightLeg = upperLeg(im, self.body_parts, 5)
+        self.leftLeg = upperLeg(im, self.body_parts, 3)
+        self.rightLeg = upperLeg(im, self.body_parts, 3)
 
     def resetImage(self):
         """
@@ -157,6 +157,9 @@ class Body:
         if(body_part == "bust"):
             self.curr_im = self.torso.performHorizontalWarping('bust', im)
         
+        if(body_part == "hip"):
+            self.curr_im = self.torso.performHorizontalWarping('hip', im)    
+    
         if(body_part == 'leftArm'):
             self.curr_im = self.leftArm.performWarpingLeftArm(im)
         
@@ -210,7 +213,7 @@ class Body:
 
         cropped_image = pil_image.crop((left, top, right, bottom))
 
-        cropped_image_path = "edited_png.png"
+        cropped_image_path = "edited.png"
         cropped_image.save(cropped_image_path, format='PNG')
         
         #cropped_image.show()
@@ -222,12 +225,15 @@ if __name__ == "__main__":
     #body.showDetectedPoints()
     #body.showWarpingPoints('leftLeg')
     #body.showWarpingPoints('rightLeg')
-
-    
+    #body.showWarpingPoints('torso')
+    body.warp('belly')
     body.warp('belly')
     body.warp('waist')
-
-    #body.show()
+    body.warp('waist')
+    body.warp('hip')
+    body.warp('leftLeg')
+    body.warp('rightLeg')
+    # body.show()
     # body.warp('rightArm')
     # body.warp('leftArm')
     # body.warp('leftLeg')
