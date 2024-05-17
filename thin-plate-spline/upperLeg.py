@@ -168,12 +168,13 @@ class upperLeg:
         self.l3 = Point(lLs3x, lLs3y, lLs3x_, lLs3y_, self.epsilon_leg)
         
         
-    def performWarpingRightLeg(self):
+    def performWarpingRightLeg(self, im):
         """
             
             Performs TPS on right leg
         
         """        
+        self.im_ = im
         s1x, s1y, s1x_, s1y_ = self.r1.getSourcePoints()
         d1x, d1y, d1x_, d1y_ = self.r1.getDestinationPoints()
         
@@ -208,16 +209,19 @@ class upperLeg:
         self.r1.updateDestinationPoints()
         self.r2.updateDestinationPoints()
         self.r3.updateDestinationPoints()
-        cv2.imwrite('edited2.png',  self.im_)
+        # cv2.imwrite('edited2.png',  self.im_)
+        
+        return self.im_
 
     
-    def performWarpingLefttLeg(self):
+    def performWarpingLefttLeg(self, im):
         
         """
             
             Performs TPS on left leg
         
         """
+        self.im_ = im
 
         l1x, l1y, l1x_, l1y_ = self.l1.getSourcePoints()
         d1x, d1y, d1x_, d1y_ = self.l1.getDestinationPoints()
@@ -253,6 +257,8 @@ class upperLeg:
         self.l1.updateDestinationPoints()
         self.l2.updateDestinationPoints()
         self.l3.updateDestinationPoints()
+
+        return self.im_
 
     def showRightLegPoints(self):
         """

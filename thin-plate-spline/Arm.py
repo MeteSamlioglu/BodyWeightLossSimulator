@@ -186,11 +186,13 @@ class Arm:
         self.l2 = Point(lRs2x, lRs2y, lRs2x_, lRs2y_, self.epsilon_arm)
         self.l3 = Point(lRs3x, lRs3y, lRs3x_, lRs3y_, self.epsilon_arm)
         
-    def performWarpingLeftArm(self):
+    def performWarpingLeftArm(self, im):
         
         """
             Performs TPS on left arm
         """
+        self.im_ = im                
+
         l1x, l1y, l1x_, l1y_ = self.l1.getSourcePoints()
         d1x, d1y, d1x_, d1y_ = self.l1.getDestinationPoints()
         
@@ -217,13 +219,16 @@ class Arm:
         new_im = tps.warpPoints(self.im_, source_points, destination_points)  
         self.im_ = new_im                
 
+        return self.im_
     
-    def performWarpingRightArm(self):
+    def performWarpingRightArm(self, im):
         """
             
             Performs TPS on right arm
         
         """        
+        self.im_ = im                
+
         s1x, s1y, s1x_, s1y_ = self.r1.getSourcePoints()
         d1x, d1y, d1x_, d1y_ = self.r1.getDestinationPoints()
         
@@ -249,8 +254,9 @@ class Arm:
         
         new_im = tps.warpPoints(self.im_, source_points, destination_points)
         
-        self.im_ = new_im                
-
+        self.im_ = new_im
+                        
+        return self.im_
 
     def setMiddlePointRightArm(self):
         
