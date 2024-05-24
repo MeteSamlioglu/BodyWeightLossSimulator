@@ -296,10 +296,51 @@ class torsoFront:
         
         # cv2.imshow('Warped', new_im)
         # cv2.waitKey(0)
-    
+    def getPixelDistance(self, part):
+        if(part == 'belly'):
+            belly_points = self.getBodyPartCoordinates('belly')
+            belly_right_source_x, belly_right_source_y, belly_left_source_x, belly_left_source_y = belly_points.getSourcePoints()
+            distance_pixel = belly_left_source_x - belly_right_source_x
+            return distance_pixel
+        elif (part == 'waist'):
+            waist_points = self.getBodyPartCoordinates('waist')
+            waist_right_source_x, waist_right_source_y, waist_left_source_x, waist_left_source_y = waist_points.getSourcePoints()
+            distance_pixel = waist_left_source_x - waist_right_source_x
+            return distance_pixel
+
+        elif (part == 'bust'):
+            bust_points = self.getBodyPartCoordinates('bust')
+            bust_right_source_x, bust_right_source_y, bust_left_source_x, bust_left_source_y = bust_points.getSourcePoints()
+            distance_pixel = bust_left_source_x - bust_right_source_x
+            return distance_pixel
+        
+        elif (part == 'hip'):
+            hip_points = self.getBodyPartCoordinates('hip')
+            hip_right_source_x, hip_right_source_y, hip_left_source_x, hip_left_source_y = hip_points.getSourcePoints()
+            distance_pixel = hip_left_source_x - hip_right_source_x
+            return distance_pixel
+        else:
+            return None
+        
+    def setByPercentage(self, part, percentage):
+        if(part == 'belly' or part == 'waist' or part == 'bust' or part == 'hip'):
+            print("GIRDIM 3")
+            distance = self.getPixelDistance(part)
+            per_part = int((distance * percentage)/2)
+            
+            #print(f'distance {distance} per_part {per_part}')
+            if(part == 'bust'):
+                self.bust.setEpsilonX(per_part)
+            elif(part == 'waist'):
+                self.waist.setEpsilonX(per_part)
+            elif(part == 'hip'):
+                self.hip.setEpsilonX(per_part)  
+            elif(part == 'belly'):
+                self.belly.setEpsilonX(per_part)  
+        else: 
+            return False
     
     def performVerticalWarping(self, body_part, step = 0):
-        
         
         if (body_part != 'belly' and body_part != 'bust'):
             return #Exception

@@ -52,10 +52,10 @@ from PIL import Image
 # if im is None:
 #     print("Error loading image. Check the file path.")
 #     exit(1)
-CROP_AMOUNT = 75
+CROP_AMOUNT = 50
 class Body:
 
-    def __init__(self, body_parts_, img):
+    def __init__(self, body_parts_, img, setByPercentage = False):
         self.initial_img = img.copy()
         self.curr_im  = img
         self.height, self.width = img.shape[:2]
@@ -65,12 +65,21 @@ class Body:
         self.steps.append(self.curr_im)
         
         self.body_parts = body_parts_ 
-        self.torso = torsoFront(img, self.body_parts, 8, 8, 5, 5) # waist, belly, bust  hip
+        
+        self.torso = torsoFront(img, self.body_parts, 3, 4, 3, 3) # waist, belly, bust  hip
         self.leftArm = Arm(img, self.body_parts, 2)
         self.rightArm = Arm(img, self.body_parts, 2)
-        self.leftLeg = upperLeg(img, self.body_parts, 7)
+        self.leftLeg = upperLeg(img, self.body_parts, 3)
         self.rightLeg = upperLeg(img, self.body_parts, 3)
+        
+        if(setByPercentage):
+            percentage = 0.12
+            self.torso.setByPercentage('belly', percentage)
+            self.torso.setByPercentage('waist', percentage)
+            self.torso.setByPercentage('hip', percentage)
+            self.torso.setByPercentage('bust', percentage)
 
+    
     def resetImage(self):
         """
             Returns:
@@ -143,6 +152,7 @@ class Body:
             im = self.leftLeg.showAllLegPoints()
             cv2.imshow('Leg Warping Points',im)
             cv2.waitKey(0)
+        
     
     def warp(self, body_part):
     

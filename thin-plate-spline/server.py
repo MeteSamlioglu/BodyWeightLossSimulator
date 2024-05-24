@@ -71,15 +71,27 @@ def body_weight_loss():
             'rightAnkle': body_parts_data['keypoints'].get('rightAnkle')
         }
         
-        # print("Received data:", extracted_data)
+        print("Received data:", body_parts_data)
         print("Image saved to:", filepath)
         
+        setEpsilonPercentage = True
+        
         im = cv2.imread(filepath)
-        body = Body(extracted_data, im)
-        body.warp('belly')
+
+        body = Body(extracted_data, im, setEpsilonPercentage)
+        
+        # body.warp('belly')
+        # body.warp('waist')
+        # body.warp('bust')
+
+        # body.showWarpingPoints('torso')
+        # body.showWarpingPoints('legs')
+        # body.showWarpingPoints('arms')
+        # body.warp('belly')
         # body.warp('waist')
         # body.warp('leftLeg')
         # body.warp('rightLeg')
+        
         body.save(cropImage=True)
         filepath = "uploads\edited.png"
         return send_file(filepath, mimetype='image/png')
