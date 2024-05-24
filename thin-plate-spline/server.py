@@ -81,8 +81,12 @@ def body_weight_loss():
         body = Body(extracted_data, im, setEpsilonPercentage)
         # body.showWarpingPoints('arms')
         body.warp('belly')
+        body.warp('hip')
         body.warp('waist')
         body.warp('bust')
+        
+        body.warp('rightArm')
+        body.warp('leftArm')
 
         body.warp('leftLeg')
         body.warp('rightLeg')
@@ -96,7 +100,7 @@ def body_weight_loss():
         # body.warp('leftLeg')
         # body.warp('rightLeg')
         
-        body.save(cropImage=True)
+        body.save(cropImage=False)
         filepath = "uploads\edited.png"
         return send_file(filepath, mimetype='image/png')
     else:

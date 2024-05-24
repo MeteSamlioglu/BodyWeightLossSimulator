@@ -330,9 +330,9 @@ class Arm:
                 self.r1.setEpsilonX(per_part_d1)
                 self.r2.setEpsilonX(per_part_d2)
                 self.r3.setEpsilonX(per_part_d3)
-                self.l1.updateDestinationPoints()
-                self.l2.updateDestinationPoints()
-                self.l3.updateDestinationPoints()
+                self.r1.updateDestinationPoints()
+                self.r2.updateDestinationPoints()
+                self.r3.updateDestinationPoints()
 
         else: 
             return False

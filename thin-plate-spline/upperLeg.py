@@ -371,7 +371,7 @@ class upperLeg:
                 self.r3.setEpsilonX(per_part_d3)
                 self.r1.updateDestinationPoints()
                 self.r2.updateDestinationPoints()
-                self.l3.updateDestinationPoints()
+                self.r3.updateDestinationPoints()
         else: 
             return False
         

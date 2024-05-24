@@ -66,14 +66,14 @@ class Body:
         
         self.body_parts = body_parts_ 
         
-        self.torso = torsoFront(img, self.body_parts, 3, 4, 3, 3) # waist, belly, bust  hip
-        self.leftArm = Arm(img, self.body_parts, 2)
-        self.rightArm = Arm(img, self.body_parts, 2)
-        self.leftLeg = upperLeg(img, self.body_parts, 3)
-        self.rightLeg = upperLeg(img, self.body_parts, 3)
+        self.torso = torsoFront(img, self.body_parts, 3, 3, 3, 3) # waist, belly, bust  hip
+        self.leftArm = Arm(img, self.body_parts, 4)
+        self.rightArm = Arm(img, self.body_parts, 4)
+        self.leftLeg = upperLeg(img, self.body_parts, 2)
+        self.rightLeg = upperLeg(img, self.body_parts, 2)
         
         if(setByPercentage):
-            percentage_torso = 0.1
+            percentage_torso = 0.05
             self.torso.setByPercentage('belly', percentage_torso)
             self.torso.setByPercentage('waist', percentage_torso)
             self.torso.setByPercentage('hip', percentage_torso)
@@ -83,7 +83,7 @@ class Body:
             self.leftLeg.setByPercentage('leftLeg', percentage_legs)
             self.rightLeg.setByPercentage('rightLeg', percentage_legs)
 
-            percentage_upperArms = 0.03
+            percentage_upperArms = 0.2
             self.leftArm.setByPercentage('leftArm', percentage_upperArms)
             self.rightArm.setByPercentage('rightArm', percentage_upperArms)
             
