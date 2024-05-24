@@ -1,10 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 import os
 import cv2
 import numpy as np
 import json
+from torsoFront import torsoFront
+from Arm import Arm
+from upperLeg import upperLeg
+from PIL import Image
+from Body import Body
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -66,9 +71,18 @@ def body_weight_loss():
             'rightAnkle': body_parts_data['keypoints'].get('rightAnkle')
         }
         
-        print("Received data:", extracted_data)
+        # print("Received data:", extracted_data)
         print("Image saved to:", filepath)
-        return jsonify({"message": "Data and image received successfully"}), 200
+        
+        im = cv2.imread(filepath)
+        body = Body(extracted_data, im)
+        body.warp('belly')
+        # body.warp('waist')
+        # body.warp('leftLeg')
+        # body.warp('rightLeg')
+        body.save(cropImage=True)
+        filepath = "uploads\edited.png"
+        return send_file(filepath, mimetype='image/png')
     else:
         return {"members": ["Member1", "Member2", "Member3"]}
 

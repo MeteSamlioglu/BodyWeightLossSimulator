@@ -28,30 +28,30 @@ from PIL import Image
 # }
 
 
-body_parts = {
-    'nose': {'x': 420.58755502194236, 'y': 178.5611058174169},
-    'leftEye': {'x': 443.9297769482637, 'y': 155.00383722986706},
-    'rightEye': {'x' : 400.32382274830314, 'y': 154.5108393834273},
-    'leftEar': {'x' : 484.14493676641524, 'y': 169.86089124694442},
-    'rightEar': {'x' : 373.1273169814852, 'y': 166.2998638175393},
-    'leftShoulder': {'x' : 546.6067086777566, 'y': 303.03412830215905},
-    'rightShoulder': {'x' : 304.9749470682122, 'y': 299.44493342859323},
-    'leftElbow': {'x' : 630.3275056446947, 'y': 474.6997010503284},
-    'rightElbow': {'x' : 226.439762177148, 'y': 456.13560834652543},
-    'leftWrist': {'x' : 549.1664952681191, 'y': 619.3380513168905},
-    'rightWrist': {'x' : 277.1653803677812, 'y': 623.2991806244515},
-    'leftHip': {'x' : 525.0838155702411, 'y': 651.4093179970561},
-    'rightHip': {'x' : 339.0650141365809, 'y': 658.5777996854737},
-    'leftKnee': {'x' : 548.7685618642847, 'y': 871.7984340864112},
-    'rightKnee': {'x' : 330.1582183749791, 'y': 893.0001537067097},
-    'leftAnkle': {'x' : 577.1193602663265, 'y': 1150.7460334557638},
-    'rightAnkle': {'x' : 309.0422612558061, 'y': 1159.517769210982}
-}
+# body_parts = {
+#     'nose': {'x': 420.58755502194236, 'y': 178.5611058174169},
+#     'leftEye': {'x': 443.9297769482637, 'y': 155.00383722986706},
+#     'rightEye': {'x' : 400.32382274830314, 'y': 154.5108393834273},
+#     'leftEar': {'x' : 484.14493676641524, 'y': 169.86089124694442},
+#     'rightEar': {'x' : 373.1273169814852, 'y': 166.2998638175393},
+#     'leftShoulder': {'x' : 546.6067086777566, 'y': 303.03412830215905},
+#     'rightShoulder': {'x' : 304.9749470682122, 'y': 299.44493342859323},
+#     'leftElbow': {'x' : 630.3275056446947, 'y': 474.6997010503284},
+#     'rightElbow': {'x' : 226.439762177148, 'y': 456.13560834652543},
+#     'leftWrist': {'x' : 549.1664952681191, 'y': 619.3380513168905},
+#     'rightWrist': {'x' : 277.1653803677812, 'y': 623.2991806244515},
+#     'leftHip': {'x' : 525.0838155702411, 'y': 651.4093179970561},
+#     'rightHip': {'x' : 339.0650141365809, 'y': 658.5777996854737},
+#     'leftKnee': {'x' : 548.7685618642847, 'y': 871.7984340864112},
+#     'rightKnee': {'x' : 330.1582183749791, 'y': 893.0001537067097},
+#     'leftAnkle': {'x' : 577.1193602663265, 'y': 1150.7460334557638},
+#     'rightAnkle': {'x' : 309.0422612558061, 'y': 1159.517769210982}
+# }
 
-im = cv2.imread('samples//sample5.jpg')
-if im is None:
-    print("Error loading image. Check the file path.")
-    exit(1)
+# im = cv2.imread('samples//sample5.jpg')
+# if im is None:
+#     print("Error loading image. Check the file path.")
+#     exit(1)
 CROP_AMOUNT = 75
 class Body:
 
@@ -68,8 +68,8 @@ class Body:
         self.torso = torsoFront(img, self.body_parts, 8, 8, 5, 5) # waist, belly, bust  hip
         self.leftArm = Arm(img, self.body_parts, 2)
         self.rightArm = Arm(img, self.body_parts, 2)
-        self.leftLeg = upperLeg(im, self.body_parts, 7)
-        self.rightLeg = upperLeg(im, self.body_parts, 3)
+        self.leftLeg = upperLeg(img, self.body_parts, 7)
+        self.rightLeg = upperLeg(img, self.body_parts, 3)
 
     def resetImage(self):
         """
@@ -97,7 +97,7 @@ class Body:
     
     def showDetectedPoints(self):
         copy_im = self.curr_im.copy()
-        for part, coords in body_parts.items():
+        for part, coords in self.body_parts.items():
             x = int(coords['x'])
             y = int(coords['y'])
             cv2.circle(copy_im, (x, y), 8, (255, 0, 0), -1)  # Blue color with filled circle
@@ -105,7 +105,7 @@ class Body:
         cv2.imshow('Image with Keypoints', copy_im)
         cv2.waitKey(0)
         
-
+# body_parts['rightKnee']['x']
     
     def showWarpingPoints(self, part_body):
         
@@ -194,7 +194,7 @@ class Body:
             if(cropImage):
                 self.crop(im)
             else:
-                cv2.imwrite('edited.png',im)
+                cv2.imwrite('uploads/edited.png',im)
 
     def crop(self,im_):
         crop_amount = 50  # Adjust as needed
@@ -213,35 +213,35 @@ class Body:
 
         cropped_image = pil_image.crop((left, top, right, bottom))
 
-        cropped_image_path = "edited.png"
+        cropped_image_path = "uploads/edited.png"
         cropped_image.save(cropped_image_path, format='PNG')
         
         #cropped_image.show()
         
        
-if __name__ == "__main__":
-    body = Body(body_parts, im)
+# if __name__ == "__main__":
+#     body = Body(body_parts, im)
     
-    body.showDetectedPoints()
-    # body.showWarpingPoints('leftLeg')
-    # body.showWarpingPoints('rightLeg')
-    # body.showWarpingPoints('torso')
-    body.warp('belly')
-    #body.warp('belly')
-    body.warp('waist')
-    #body.warp('waist')
-    body.warp('hip')
-    body.warp('leftLeg')
-    body.warp('rightLeg')
-    # body.show()
-    # body.warp('rightArm')s
-    # body.warp('leftArm')
-    # body.warp('leftLeg')
-    # body.warp('rightLeg')
-    # body.showWarpingPoints('legs')
-    # body.showWarpingPoints('leftLeg')
-    # body.showWarpingPoints('rightLeg')
-    body.save(cropImage=True)
+#     body.showDetectedPoints()
+#     # body.showWarpingPoints('leftLeg')
+#     # body.showWarpingPoints('rightLeg')
+#     # body.showWarpingPoints('torso')
+#     body.warp('belly')
+#     #body.warp('belly')
+#     body.warp('waist')
+#     #body.warp('waist')
+#     body.warp('hip')
+#     body.warp('leftLeg')
+#     body.warp('rightLeg')
+#     # body.show()
+#     # body.warp('rightArm')s
+#     # body.warp('leftArm')
+#     # body.warp('leftLeg')
+#     # body.warp('rightLeg')
+#     # body.showWarpingPoints('legs')
+#     # body.showWarpingPoints('leftLeg')
+#     # body.showWarpingPoints('rightLeg')
+#     body.save(cropImage=True)
 
 
     
