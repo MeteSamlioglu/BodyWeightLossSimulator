@@ -1,124 +1,112 @@
-import React, { useRef, useState, useEffect } from "react";
-import * as tf from "@tensorflow/tfjs";
-import * as bodyPix from "@tensorflow-models/body-pix";
-import "./App.css";
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import * as bodyPix from '@tensorflow-models/body-pix';
+import '@tensorflow/tfjs-backend-webgl';
+import './App.css'; // Import the CSS file
 
 function App() {
   const imageRef = useRef(null);
-  const canvasRef = useRef(null);
-  const [imageURL, setImageURL] = useState(null); // State to hold the uploaded image URL
+  const [imageURL, setImageURL] = useState(null);
 
-  const handleImageUpload = event => {
+  const handleImageUpload = (event) => {
     const file = event.target.files[0];
+    if (!file) {
+      // No file selected, return early
+      return;
+    }
+
     const reader = new FileReader();
 
-    reader.onload = function(e) {
+    reader.onload = function (e) {
       setImageURL(e.target.result);
     };
 
     reader.readAsDataURL(file);
   };
 
-  const runBodysegment = async () => {
+  const runBodysegment = useCallback(async () => {
     if (imageRef.current) {
       const net = await bodyPix.load();
       console.log("BodyPix model loaded.");
       detect(net);
     }
-  };
+  }, []);
 
   const detect = async (net) => {
     const image = imageRef.current;
-    const imageWidth = image.width;
-    const imageHeight = image.height;
 
-    // Set canvas height and width
-    canvasRef.current.width = imageWidth;
-    canvasRef.current.height = imageHeight;
+    // Use the image's rendered dimensions
+    const imageWidth = image.clientWidth;
+    const imageHeight = image.clientHeight;
+
+    // Set a temporary canvas to match the image's displayed dimensions
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = imageWidth;
+    tempCanvas.height = imageHeight;
+    const ctx = tempCanvas.getContext('2d');
+    ctx.drawImage(image, 0, 0, imageWidth, imageHeight);
 
     // Make detections
-    const person = await net.segmentPersonParts(image);
+    const person = await net.segmentPersonParts(tempCanvas);
     console.log(person);
-    
-    // const torsoMask = person.data.map(value => value === 0 ? 255 : 0); // Creates a binary mask for the torso
-    // const torsoImageData = new ImageData(new Uint8ClampedArray(torsoMask), imageWidth, imageHeight);
-    // const torsoCanvas = document.createElement('canvas');
-    // torsoCanvas.width = imageWidth;
-    // torsoCanvas.height = imageHeight;
-    // torsoCanvas.getContext('2d').putImageData(torsoImageData, 0, 0);
 
-    // Visualization code
-    const coloredPartImage = bodyPix.toColoredPartMask(person);
-    const opacity = 0.7;
-    const flipHorizontal = false;
-    const maskBlurAmount = 0;
-    const canvas = canvasRef.current;
+    // Extract and format the required data
+    const bodyPartsData = {
+      score: person.allPoses[0].score,
+      keypoints: person.allPoses[0].keypoints.reduce((acc, keypoint) => {
+        acc[keypoint.part] = keypoint.position;
+        return acc;
+      }, {})
+    };
 
-    bodyPix.drawMask(
-      canvas,
-      image,
-      coloredPartImage,
-      opacity,
-      maskBlurAmount,
-      flipHorizontal
-    );
+    // Send the JSON data to the Flask server
+    postBodyPartsData(bodyPartsData);
+  };
+
+  const postBodyPartsData = async (bodyPartsData) => {
+    try {
+      const response = await fetch("http://localhost:5000/BodyWeightLoss", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyPartsData),
+      });
+      const result = await response.json();
+      console.log("Data successfully sent:", result);
+    } catch (error) {
+      console.error("Error sending data:", error);
+    }
   };
 
   useEffect(() => {
     if (imageURL) {
       runBodysegment();
     }
-  }, [imageURL]); // Re-run the effect when imageURL changes
+  }, [imageURL, runBodysegment]);
 
   return (
     <div className="App">
       <header className="App-header">
-        <input 
-          type="file" 
-          onChange={handleImageUpload} 
-          accept="image/*" 
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: 10,
-            width: '100%',
-            opacity: 1,
-            cursor: 'pointer',
-          }}
-        />
-        {imageURL && (
-          <div style={{
-            position: "relative",
-            maxWidth: "100%",
-            maxHeight: "100%",
-          }}>
+        <div className="image-container">
+          {imageURL && (
             <img
               ref={imageRef}
               src={imageURL}
               alt="Upload Preview"
               onLoad={runBodysegment}
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-                display: "block", // Ensure it fills the container
-              }}
+              className="uploaded-image"
             />
-            <canvas
-              ref={canvasRef}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-              }}
-            />
-          </div>
-        )}
+          )}
+        </div>
+        <input
+          type="file"
+          onChange={handleImageUpload}
+          accept="image/*"
+          className="file-input"
+        />
       </header>
     </div>
-  ); 
+  );
 }
 
 export default App;

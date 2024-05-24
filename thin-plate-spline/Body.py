@@ -68,7 +68,7 @@ class Body:
         self.torso = torsoFront(img, self.body_parts, 8, 8, 5, 5) # waist, belly, bust  hip
         self.leftArm = Arm(img, self.body_parts, 2)
         self.rightArm = Arm(img, self.body_parts, 2)
-        self.leftLeg = upperLeg(im, self.body_parts, 3)
+        self.leftLeg = upperLeg(im, self.body_parts, 7)
         self.rightLeg = upperLeg(im, self.body_parts, 3)
 
     def resetImage(self):
@@ -222,19 +222,19 @@ class Body:
 if __name__ == "__main__":
     body = Body(body_parts, im)
     
-    #body.showDetectedPoints()
-    #body.showWarpingPoints('leftLeg')
-    #body.showWarpingPoints('rightLeg')
-    #body.showWarpingPoints('torso')
+    body.showDetectedPoints()
+    # body.showWarpingPoints('leftLeg')
+    # body.showWarpingPoints('rightLeg')
+    # body.showWarpingPoints('torso')
     body.warp('belly')
-    body.warp('belly')
+    #body.warp('belly')
     body.warp('waist')
-    body.warp('waist')
+    #body.warp('waist')
     body.warp('hip')
     body.warp('leftLeg')
     body.warp('rightLeg')
     # body.show()
-    # body.warp('rightArm')
+    # body.warp('rightArm')s
     # body.warp('leftArm')
     # body.warp('leftLeg')
     # body.warp('rightLeg')
