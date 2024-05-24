@@ -45,31 +45,35 @@ function App() {
     const ctx = tempCanvas.getContext('2d');
     ctx.drawImage(image, 0, 0, imageWidth, imageHeight);
 
-    // Make detections
-    const person = await net.segmentPersonParts(tempCanvas);
-    console.log(person);
+    // Convert the canvas to a Blob (resized image)
+    tempCanvas.toBlob(async (blob) => {
+      // Make detections
+      const person = await net.segmentPersonParts(tempCanvas);
+      console.log(person);
 
-    // Extract and format the required data
-    const bodyPartsData = {
-      score: person.allPoses[0].score,
-      keypoints: person.allPoses[0].keypoints.reduce((acc, keypoint) => {
-        acc[keypoint.part] = keypoint.position;
-        return acc;
-      }, {})
-    };
+      // Extract and format the required data
+      const bodyPartsData = {
+        score: person.allPoses[0].score,
+        keypoints: person.allPoses[0].keypoints.reduce((acc, keypoint) => {
+          acc[keypoint.part] = keypoint.position;
+          return acc;
+        }, {})
+      };
 
-    // Send the JSON data to the Flask server
-    postBodyPartsData(bodyPartsData);
+      // Send the JSON data and the resized image to the Flask server
+      postBodyPartsData(bodyPartsData, blob);
+    }, 'image/png');
   };
 
-  const postBodyPartsData = async (bodyPartsData) => {
+  const postBodyPartsData = async (bodyPartsData, imageBlob) => {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(bodyPartsData));
+    formData.append('image', imageBlob, 'resized_image.png');
+
     try {
       const response = await fetch("http://localhost:5000/BodyWeightLoss", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(bodyPartsData),
+        body: formData,
       });
       const result = await response.json();
       console.log("Data successfully sent:", result);
