@@ -68,10 +68,10 @@ class Point:
         """
             Updates destination points after TPS 
         """
-        self.right_destination_x = self.right_destination_x + self.epsilon_x
+        self.right_destination_x = self.right_source_x + self.epsilon_x
         self.right_destination_y = self.right_destination_y
         
-        self.left_destination_x =   self.left_destination_x - self.epsilon_x
+        self.left_destination_x =   self.left_source_x - self.epsilon_x
         self.left_destination_y =  self.left_destination_y
 
 

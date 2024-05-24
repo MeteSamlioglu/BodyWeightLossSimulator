@@ -79,11 +79,15 @@ def body_weight_loss():
         im = cv2.imread(filepath)
 
         body = Body(extracted_data, im, setEpsilonPercentage)
-        
-        # body.warp('belly')
-        # body.warp('waist')
-        # body.warp('bust')
+        # body.showWarpingPoints('arms')
+        body.warp('belly')
+        body.warp('waist')
+        body.warp('bust')
 
+        body.warp('leftLeg')
+        body.warp('rightLeg')
+        
+        # body.warp('bust')
         # body.showWarpingPoints('torso')
         # body.showWarpingPoints('legs')
         # body.showWarpingPoints('arms')

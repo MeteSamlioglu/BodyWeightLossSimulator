@@ -317,6 +317,63 @@ class upperLeg:
                 Returns the image
         """
         return self.im_
+    
+    
+    def getPixelDistance(self, part):
+        
+        if(part == 'leftLeg'):
+            l1_right_source_x, _, l1_left_source_x, _  = self.l1.getSourcePoints()
+            l2_right_source_x, _, l2_left_source_x, _ =  self.l2.getSourcePoints()
+            l3_right_source_x, _, l3_left_source_x, _ =  self.l3.getSourcePoints()
+
+            d1 = l1_left_source_x - l1_right_source_x
+            d2 = l2_left_source_x - l2_right_source_x
+            d3 = l3_left_source_x - l3_right_source_x   
+            #print(f'leftLeg d1 {d1} d2 {d2} d3 {d3}')
+            return d1, d2, d3
+        
+        elif (part == 'rightLeg'):
+            r1_right_source_x, _, r1_left_source_x, _  = self.r1.getSourcePoints()
+            r2_right_source_x, _, r2_left_source_x, _ =  self.r2.getSourcePoints()
+            r3_right_source_x, _, r3_left_source_x, _ =  self.r3.getSourcePoints()
+
+            d1 = r1_left_source_x - r1_right_source_x
+            d2 = r2_left_source_x - r2_right_source_x
+            d3 = r3_left_source_x - r3_right_source_x   
+            
+            #print(f'rightLeg d1 {d1} d2 {d2} d3 {d3}')
+
+            return d1, d2, d3
+        else:
+            return None
+    
+    
+    def setByPercentage(self, part, percentage):
+        
+        if(part == 'leftLeg' or part == 'rightLeg'):
+            d1, d2, d3 = self.getPixelDistance(part)
+            per_part_d1 = int((d1 * percentage)/2)
+            per_part_d2 = int((d2 * percentage)/2)
+            per_part_d3 = int((d3 * percentage)/2)
+            #print(f'{part} pp1 {per_part_d1} pp2 {per_part_d2} pp3 {per_part_d3}')
+
+            if(part == 'leftLeg'):
+                self.l1.setEpsilonX(per_part_d1)
+                self.l2.setEpsilonX(per_part_d2)
+                self.l3.setEpsilonX(per_part_d3)
+                self.l1.updateDestinationPoints()
+                self.l2.updateDestinationPoints()
+                self.l3.updateDestinationPoints()
+
+            if(part == 'rightLeg'):
+                self.r1.setEpsilonX(per_part_d1)
+                self.r2.setEpsilonX(per_part_d2)
+                self.r3.setEpsilonX(per_part_d3)
+                self.r1.updateDestinationPoints()
+                self.r2.updateDestinationPoints()
+                self.l3.updateDestinationPoints()
+        else: 
+            return False
         
 if __name__ == "__main__":
     

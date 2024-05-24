@@ -324,19 +324,26 @@ class torsoFront:
         
     def setByPercentage(self, part, percentage):
         if(part == 'belly' or part == 'waist' or part == 'bust' or part == 'hip'):
-            print("GIRDIM 3")
             distance = self.getPixelDistance(part)
             per_part = int((distance * percentage)/2)
             
             #print(f'distance {distance} per_part {per_part}')
             if(part == 'bust'):
                 self.bust.setEpsilonX(per_part)
+                self.bust.updateDestinationPoints()
+
             elif(part == 'waist'):
                 self.waist.setEpsilonX(per_part)
+                self.waist.updateDestinationPoints()
+
             elif(part == 'hip'):
                 self.hip.setEpsilonX(per_part)  
+                self.hip.updateDestinationPoints()
+
             elif(part == 'belly'):
                 self.belly.setEpsilonX(per_part)  
+                self.belly.updateDestinationPoints()
+
         else: 
             return False
     

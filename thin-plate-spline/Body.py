@@ -73,12 +73,20 @@ class Body:
         self.rightLeg = upperLeg(img, self.body_parts, 3)
         
         if(setByPercentage):
-            percentage = 0.12
-            self.torso.setByPercentage('belly', percentage)
-            self.torso.setByPercentage('waist', percentage)
-            self.torso.setByPercentage('hip', percentage)
-            self.torso.setByPercentage('bust', percentage)
+            percentage_torso = 0.1
+            self.torso.setByPercentage('belly', percentage_torso)
+            self.torso.setByPercentage('waist', percentage_torso)
+            self.torso.setByPercentage('hip', percentage_torso)
+            self.torso.setByPercentage('bust', percentage_torso)
+            
+            percentage_legs = 0.1
+            self.leftLeg.setByPercentage('leftLeg', percentage_legs)
+            self.rightLeg.setByPercentage('rightLeg', percentage_legs)
 
+            percentage_upperArms = 0.03
+            self.leftArm.setByPercentage('leftArm', percentage_upperArms)
+            self.rightArm.setByPercentage('rightArm', percentage_upperArms)
+            
     
     def resetImage(self):
         """
