@@ -361,9 +361,11 @@ class upperLeg:
                 self.l1.setEpsilonX(per_part_d1)
                 self.l2.setEpsilonX(per_part_d2)
                 self.l3.setEpsilonX(per_part_d3)
+                
                 self.l1.updateDestinationPoints()
                 self.l2.updateDestinationPoints()
                 self.l3.updateDestinationPoints()
+                
 
             if(part == 'rightLeg'):
                 self.r1.setEpsilonX(per_part_d1)
@@ -372,19 +374,21 @@ class upperLeg:
                 self.r1.updateDestinationPoints()
                 self.r2.updateDestinationPoints()
                 self.r3.updateDestinationPoints()
+            
+            return True
         else: 
             return False
         
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    rightLeg = upperLeg(im, body_parts, 10) # Epsilon Value for weight loss on rightLeg
-    rightLeg.performWarpingRightLeg()
+#     rightLeg = upperLeg(im, body_parts, 10) # Epsilon Value for weight loss on rightLeg
+#     rightLeg.performWarpingRightLeg()
 
-    #rightLeg.showRightLegPoints()
+#     #rightLeg.showRightLegPoints()
     
-    #im = rightLeg.getImage()
+#     #im = rightLeg.getImage()
     
-    cv2.imwrite('edited.png', im)
+#     cv2.imwrite('edited.png', im)
 
 
 

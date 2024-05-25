@@ -14,7 +14,7 @@ def WarpImage_TPS(source,target,img):
 
 	tps.estimateTransformation(target, source, matches)  # note it is target --> source
 
-	new_img = tps.warpImage(img, flags = cv2.INTER_LANCZOS4)
+	new_img = tps.warpImage(img, flags = cv2.INTER_LANCZOS4) 
 
 	# get the warp kps in for source and target
 	tps.estimateTransformation(source, target, matches)  # note it is source --> target

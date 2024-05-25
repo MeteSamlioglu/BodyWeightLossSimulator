@@ -59,7 +59,6 @@ class Body:
         self.initial_img = img.copy()
         self.curr_im  = img
         self.height, self.width = img.shape[:2]
-        
         self.steps = []
         self.step_counter = 0
         self.steps.append(self.curr_im)
@@ -67,27 +66,42 @@ class Body:
         self.body_parts = body_parts_ 
         
         self.torso = torsoFront(img, self.body_parts, 3, 3, 3, 3) # waist, belly, bust  hip
-        self.leftArm = Arm(img, self.body_parts, 4)
-        self.rightArm = Arm(img, self.body_parts, 4)
+        self.leftArm = Arm(img, self.body_parts, 1)
+        self.rightArm = Arm(img, self.body_parts, 1)
         self.leftLeg = upperLeg(img, self.body_parts, 2)
         self.rightLeg = upperLeg(img, self.body_parts, 2)
-        
+        self.setMaxCrop()
+       #BodyMassIndex'i girecez 22.5 > overweight aylar alt alta yazılacak  her resmin altın ay ve body mass 
         if(setByPercentage):
-            percentage_torso = 0.05
+            percentage_torso = 0.12
             self.torso.setByPercentage('belly', percentage_torso)
             self.torso.setByPercentage('waist', percentage_torso)
             self.torso.setByPercentage('hip', percentage_torso)
             self.torso.setByPercentage('bust', percentage_torso)
             
-            percentage_legs = 0.1
+            percentage_legs = 0.10
             self.leftLeg.setByPercentage('leftLeg', percentage_legs)
             self.rightLeg.setByPercentage('rightLeg', percentage_legs)
 
-            percentage_upperArms = 0.2
+            percentage_upperArms = 0.10
             self.leftArm.setByPercentage('leftArm', percentage_upperArms)
             self.rightArm.setByPercentage('rightArm', percentage_upperArms)
             
+    def setMaxCrop(self):
+        
+        a1 = ("Shoulder", int(self.body_parts['leftShoulder']['x'] - self.body_parts['rightShoulder']['x']))
+        a2   =  ("Elbow" , int(self.body_parts['leftElbow']['x'] - self.body_parts['rightElbow']['x']))
+        a3   =  ("Wrist", int(self.body_parts['leftWrist']['x'] - self.body_parts['rightWrist']['x']))
+
+        distances = [a1, a2, a3]
     
+        max_distance_tuple = max(distances, key=lambda x: x[1])
+        
+        max_name, max_distance = max_distance_tuple
+        self.cropRightMax = self.body_parts["right" + max_name]
+        self.cropLeftMax = self.body_parts ["left" + max_name]
+
+
     def resetImage(self):
         """
             Returns:
@@ -221,6 +235,7 @@ class Body:
         image_rgb = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         pil_image = Image.fromarray(image_rgb)
 
+        # print(f'selfRight max {self.cropRightMax} selfLeftMax {self.cropLeftMax}')
         # # Calculate the new bounding box
         crop_amount = CROP_AMOUNT  
 

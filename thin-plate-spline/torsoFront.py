@@ -296,6 +296,8 @@ class torsoFront:
         
         # cv2.imshow('Warped', new_im)
         # cv2.waitKey(0)
+        
+        
     def getPixelDistance(self, part):
         if(part == 'belly'):
             belly_points = self.getBodyPartCoordinates('belly')
@@ -414,11 +416,11 @@ class torsoFront:
         return self.im_
    
         
-if __name__ == "__main__":
-    body_parts
+# if __name__ == "__main__":
+#     body_parts
     
-    torso = torsoFront(im, body_parts)
-    torso.showAllSourcePoints()
+#     torso = torsoFront(im, body_parts)
+#     torso.showAllSourcePoints()
     
     #show_detected_points(body_parts)
     #torso.showWarpingPoints()

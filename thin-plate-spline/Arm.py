@@ -94,6 +94,7 @@ class Arm:
         
                 
         self.setRightArmPoints()
+        
         self.setLeftArmPoints()
         
         #self.showAllArmPoints()
@@ -204,6 +205,12 @@ class Arm:
         
         source_points = np.array([
         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, l1y], [0, l2y], [0, l3y],
+        [self.width, l1y_], [self.width, l2y_], [self.width, l3y_],
+        #---------------
+        
         [l1x, l1y], [l1x_, l1y_],
         [l2x, l2y], [l2x_, l2y_],
         [l3x, l3y], [l3x_, l3y_]
@@ -211,6 +218,12 @@ class Arm:
         
         destination_points = np.array([
             [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+            
+            #edited
+            [0, l1y], [0, l2y], [0, l3y],
+            [self.width, l1y_], [self.width, l2y_], [self.width, l3y_],
+            #---------------
+            
             [d1x, d1y], [d1x_, d1y_],
             [d2x, d2y], [d2x_, d2y_],
             [d3x, d3y], [d3x_, d3y_]
@@ -237,19 +250,29 @@ class Arm:
         
         s3x, s3y, s3x_, s3y_ = self.r3.getSourcePoints()
         d3x, d3y, d3x_, d3y_ = self.r3.getDestinationPoints()
-        
+
         source_points = np.array([
         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, s1y], [0, s2y], [0, s3y],
+        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_],
+        #---------------
         [s1x, s1y], [s1x_, s1y_],
         [s2x, s2y], [s2x_, s2y_],
         [s3x, s3y], [s3x_, s3y_]
         ])
         
         destination_points = np.array([
-            [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-            [d1x, d1y], [d1x_, d1y_],
-            [d2x, d2y], [d2x_, d2y_],
-            [d3x, d3y], [d3x_, d3y_]
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, s1y], [0, s2y], [0, s3y],
+        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_],
+        #--------------------------------
+        [d1x, d1y], [d1x_, d1y_],
+        [d2x, d2y], [d2x_, d2y_],
+        [d3x, d3y], [d3x_, d3y_]
         ])
         
         new_im = tps.warpPoints(self.im_, source_points, destination_points)
@@ -282,17 +305,7 @@ class Arm:
     def getPixelDistance(self, part):
         
         if(part == 'rightArm'):
-            l1_right_source_x, _, l1_left_source_x, _  = self.l1.getSourcePoints()
-            l2_right_source_x, _, l2_left_source_x, _ =  self.l2.getSourcePoints()
-            l3_right_source_x, _, l3_left_source_x, _ =  self.l3.getSourcePoints()
-
-            d1 = l1_left_source_x - l1_right_source_x
-            d2 = l2_left_source_x - l2_right_source_x
-            d3 = l3_left_source_x - l3_right_source_x   
-            #print(f'leftLeg d1 {d1} d2 {d2} d3 {d3}')
-            return d1, d2, d3
-        
-        elif (part == 'leftArm'):
+            
             r1_right_source_x, _, r1_left_source_x, _  = self.r1.getSourcePoints()
             r2_right_source_x, _, r2_left_source_x, _ =  self.r2.getSourcePoints()
             r3_right_source_x, _, r3_left_source_x, _ =  self.r3.getSourcePoints()
@@ -300,8 +313,19 @@ class Arm:
             d1 = r1_left_source_x - r1_right_source_x
             d2 = r2_left_source_x - r2_right_source_x
             d3 = r3_left_source_x - r3_right_source_x   
+            # print(f'rightArm d1 {d1} d2 {d2} d3 {d3}')
+            return d1, d2, d3
+        
+        elif (part == 'leftArm'):
+            l1_right_source_x, _, l1_left_source_x, _  = self.l1.getSourcePoints()
+            l2_right_source_x, _, l2_left_source_x, _ =  self.l2.getSourcePoints()
+            l3_right_source_x, _, l3_left_source_x, _ =  self.l3.getSourcePoints()
+
+            d1 = l1_left_source_x - l1_right_source_x
+            d2 = l2_left_source_x - l2_right_source_x
+            d3 = l3_left_source_x - l3_right_source_x   
             
-            #print(f'rightLeg d1 {d1} d2 {d2} d3 {d3}')
+            # print(f'leftArm d1 {d1} d2 {d2} d3 {d3}')
 
             return d1, d2, d3
         else:
@@ -311,35 +335,42 @@ class Arm:
     def setByPercentage(self, part, percentage):
         
         if(part == 'leftArm' or part == 'rightArm'):
+            
             d1, d2, d3 = self.getPixelDistance(part)
+            # print(f'{part} d1 {d1} d2 {d2}  d3 {d3}')
+            
             per_part_d1 = int((d1 * percentage)/2)
             per_part_d2 = int((d2 * percentage)/2)
             per_part_d3 = int((d3 * percentage)/2)
-            #print(f'{part} pp1 {per_part_d1} pp2 {per_part_d2} pp3 {per_part_d3}')
 
             if(part == 'leftArm'):
+                # print(f'epsilons {per_part_d1} {per_part_d2} {per_part_d3}')
                 self.l1.setEpsilonX(per_part_d1)
                 self.l2.setEpsilonX(per_part_d2)
                 self.l3.setEpsilonX(per_part_d3)
+                  
                 self.l1.updateDestinationPoints()
                 self.l2.updateDestinationPoints()
                 self.l3.updateDestinationPoints()
 
-
             if(part == 'rightArm'):
+                
+                # print(f'epsilons {per_part_d1} {per_part_d2} {per_part_d3}')
                 self.r1.setEpsilonX(per_part_d1)
                 self.r2.setEpsilonX(per_part_d2)
                 self.r3.setEpsilonX(per_part_d3)
+                
                 self.r1.updateDestinationPoints()
                 self.r2.updateDestinationPoints()
                 self.r3.updateDestinationPoints()
+            return True
 
         else: 
             return False
 
 
     
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
     # Arms = Arm(im,body_parts, 5)
     # #Arms.showAllArmPoints()
@@ -348,12 +379,12 @@ if __name__ == "__main__":
     # Arms.performWarpingRightArm()
     # im_ = Arms.getImage()
 
-    torso = torsoFront(im, body_parts)
-    im = torso.performHorizontalWarping('belly', im)
+    # torso = torsoFront(im, body_parts)
+    # im = torso.performHorizontalWarping('belly', im)
     
-    im = torso.performHorizontalWarping('waist', im)
+    # im = torso.performHorizontalWarping('waist', im)
 
-    cv2.imwrite('edited.png',im)
+    # cv2.imwrite('edited.png',im)
 
     # torso.showAllSourcePoints()
     
