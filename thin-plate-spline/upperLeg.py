@@ -3,6 +3,7 @@ import cv2
 import os
 from core import Point
 from core import tps
+from core import pointMath
 
 # body_parts = {
     
@@ -162,7 +163,7 @@ class upperLeg:
         
         lLs3x_ = leftLeg_midX + (leftLeg_midX - lLs3x)
         lLs3y_ = lLs3y
-        
+
         self.l1 = Point(lLs1x, lLs1y, lLs1x_, lLs1y_, self.epsilon_leg)
         self.l2 = Point(lLs2x, lLs2y, lLs2x_, lLs2y_, self.epsilon_leg)
         self.l3 = Point(lLs3x, lLs3y, lLs3x_, lLs3y_, self.epsilon_leg)
@@ -186,16 +187,28 @@ class upperLeg:
         
         source_points = np.array([
         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, s1y], [0, s2y], [0, s3y],
+        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_],
+        #---------------
+        
         [s1x, s1y], [s1x_, s1y_],
         [s2x, s2y], [s2x_, s2y_],
         [s3x, s3y], [s3x_, s3y_]
         ])
         
         destination_points = np.array([
-            [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-            [d1x, d1y], [d1x_, d1y_],
-            [d2x, d2y], [d2x_, d2y_],
-            [d3x, d3y], [d3x_, d3y_]
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, s1y], [0, s2y], [0, s3y],
+        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_],
+        #---------------
+        
+        [d1x, d1y], [d1x_, d1y_],
+        [d2x, d2y], [d2x_, d2y_],
+        [d3x, d3y], [d3x_, d3y_]
         ])
         
         new_im = tps.warpPoints(self.im_, source_points, destination_points)
@@ -234,16 +247,28 @@ class upperLeg:
         
         source_points = np.array([
         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, l1y], [0, l2y], [0, l3y],
+        [self.width, l1y_], [self.width, l2y_], [self.width, l3y_],
+        #---------------
+        
         [l1x, l1y], [l1x_, l1y_],
         [l2x, l2y], [l2x_, l2y_],
         [l3x, l3y], [l3x_, l3y_]
         ])
         
         destination_points = np.array([
-            [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-            [d1x, d1y], [d1x_, d1y_],
-            [d2x, d2y], [d2x_, d2y_],
-            [d3x, d3y], [d3x_, d3y_]
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, l1y], [0, l2y], [0, l3y],
+        [self.width, l1y_], [self.width, l2y_], [self.width, l3y_],
+        #---------------
+        
+        [d1x, d1y], [d1x_, d1y_],
+        [d2x, d2y], [d2x_, d2y_],
+        [d3x, d3y], [d3x_, d3y_]
         ])
         
         new_im = tps.warpPoints(self.im_, source_points, destination_points)
@@ -329,7 +354,7 @@ class upperLeg:
             d1 = l1_left_source_x - l1_right_source_x
             d2 = l2_left_source_x - l2_right_source_x
             d3 = l3_left_source_x - l3_right_source_x   
-            #print(f'leftLeg d1 {d1} d2 {d2} d3 {d3}')
+
             return d1, d2, d3
         
         elif (part == 'rightLeg'):
@@ -352,9 +377,14 @@ class upperLeg:
         
         if(part == 'leftLeg' or part == 'rightLeg'):
             d1, d2, d3 = self.getPixelDistance(part)
-            per_part_d1 = int((d1 * percentage)/2)
-            per_part_d2 = int((d2 * percentage)/2)
-            per_part_d3 = int((d3 * percentage)/2)
+            # per_part_d1 = int((d1 * percentage)/2)
+            # per_part_d2 = int((d2 * percentage)/2)
+            # per_part_d3 = int((d3 * percentage)/2)
+            
+            per_part_d1 = pointMath.custom_round((d1 * percentage) / 2)
+            per_part_d2 = pointMath.custom_round((d2 * percentage) / 2)
+            per_part_d3 = pointMath.custom_round((d3 * percentage) / 2)
+            
             #print(f'{part} pp1 {per_part_d1} pp2 {per_part_d2} pp3 {per_part_d3}')
 
             if(part == 'leftLeg'):
@@ -366,7 +396,7 @@ class upperLeg:
                 self.l2.updateDestinationPoints()
                 self.l3.updateDestinationPoints()
                 
-
+ 
             if(part == 'rightLeg'):
                 self.r1.setEpsilonX(per_part_d1)
                 self.r2.setEpsilonX(per_part_d2)

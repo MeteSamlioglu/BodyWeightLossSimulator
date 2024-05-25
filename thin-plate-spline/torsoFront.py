@@ -284,9 +284,7 @@ class torsoFront:
         
         # print(f'right source {right_source_x} right destination {right_destination_x}')
         copy_im = im.copy()
-        
         new_im = tps.warpPoints(copy_im, source_points, destination_points)
-        
         return new_im
     
         # points.updateSourcePoints()

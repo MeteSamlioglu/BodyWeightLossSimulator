@@ -5,6 +5,7 @@ from torsoFront import torsoFront
 
 from core import Point
 from core import tps
+from core import pointMath
 
 # body_parts = {
     
@@ -88,6 +89,12 @@ class Arm:
            
         self.leftElbow_x =  int( self.body_parts['leftElbow']['x']) #  leftElbow's x coordinate
         self.leftElbow_y = int( self.body_parts['leftElbow']['y'])  # leftElbow's y coordinate  
+        
+        self.rightWrist_x =  int( self.body_parts['rightWrist']['x'])
+        self.rightWrist_y =  int( self.body_parts['rightWrist']['y'])
+        
+        self.leftWrist_x =  int( self.body_parts['leftWrist']['x'])
+        self.leftWrist_y =  int( self.body_parts['leftWrist']['y'])
     
         self.setMiddlePointRightArm()
         self.setMiddlePointLeftArm()
@@ -126,17 +133,62 @@ class Arm:
         rRs2y = rRs2y_
         rRs3y = rRs3y_
         
+        # Lower Arm
+ 
+        self.midLowerArm_x = int((self.rightWrist_x + self.rightElbow_x) / 2)
+        self.midLowerArm_y = int((self.rightWrist_y + self.rightElbow_y) / 2)
+        
+        rRs7x = self.rightElbow_x - diff_x
+        rRs7y = self.rightElbow_y
+        
+        rRs7x_ = self.rightElbow_x
+        rRs7y_ = self.rightElbow_y
+        
+        rRs4x_ =  int((self.midLowerArm_x + self.rightElbow_x)/ 2)
+        rRs4y_ =  int((self.midLowerArm_y + self.rightElbow_y)/ 2)
+        rRs4x =  int((self.midLowerArm_x + self.rightElbow_x)/ 2) - diff_x
+        rRs4y =  int((self.midLowerArm_y + self.rightElbow_y)/ 2)
+        
+        rRs5x_ =  self.midLowerArm_x
+        rRs5y_ = self.midLowerArm_y
+        rRs5x =  self.midLowerArm_x - diff_x
+        rRs5y = self.midLowerArm_y
+        
+        midRs6x_ =  int((self.midLowerArm_x + self.rightWrist_x)/ 2)
+        midRs6y_ =  int((self.midLowerArm_y + self.rightWrist_y)/ 2)
+        
+        rRs6x_ =  midRs6x_ 
+        rRs6y_ = midRs6y_
+        rRs6x =  midRs6x_  - diff_x
+        rRs6y = midRs6y_
+
         self.r1 = Point(rRs1x, rRs1y, rRs1x_, rRs1y_, self.epsilon_arm)
         self.r2 = Point(rRs2x, rRs2y, rRs2x_, rRs2y_, self.epsilon_arm)
         self.r3 = Point(rRs3x, rRs3y, rRs3x_, rRs3y_, self.epsilon_arm)
+        
+        self.r4 = Point(rRs4x, rRs4y , rRs4x_, rRs4y_, self.epsilon_arm)
+        self.r5 = Point(rRs5x, rRs5y , rRs5x_, rRs5y_, self.epsilon_arm)
+        self.r6 = Point(rRs6x, rRs6y, rRs6x_, rRs6y_, self.epsilon_arm)
+        self.r7 = Point(rRs7x, rRs7y, rRs7x_, rRs7y_, self.epsilon_arm)
+
+        
+        #self.r7 = Point(rRs6x, rRs6y, rRs6x_, rRs6y_, self.epsilon_arm)
+
 
     def showRightArmPoints(self):
         copy_im = self.im_.copy()
+        print('Activated')
+
         
         self.r1.drawPoint(copy_im)
         self.r2.drawPoint(copy_im)
         self.r3.drawPoint(copy_im)
         
+        self.r4.drawPoint(copy_im)
+        self.r5.drawPoint(copy_im)
+        self.r6.drawPoint(copy_im)
+        self.r7.drawPoint(copy_im)
+
         return copy_im
     
     def showLeftArmPoints(self):
@@ -145,6 +197,10 @@ class Arm:
         self.l1.drawPoint(copy_im)
         self.l2.drawPoint(copy_im)
         self.l3.drawPoint(copy_im)
+        
+        self.l4.drawPoint(copy_im)
+        self.l5.drawPoint(copy_im)
+        self.l6.drawPoint(copy_im)
         
         return copy_im
     
@@ -155,11 +211,19 @@ class Arm:
         self.r1.drawPoint(copy_im)
         self.r2.drawPoint(copy_im)
         self.r3.drawPoint(copy_im)
+        self.r4.drawPoint(copy_im)
+        self.r5.drawPoint(copy_im)
+        self.r6.drawPoint(copy_im)
+        self.r7.drawPoint(copy_im)
 
         self.l1.drawPoint(copy_im)
         self.l2.drawPoint(copy_im)
         self.l3.drawPoint(copy_im)
-        
+        self.l4.drawPoint(copy_im)
+        self.l5.drawPoint(copy_im)
+        self.l6.drawPoint(copy_im)
+        self.l7.drawPoint(copy_im)
+
         return copy_im
     
     def setLeftArmPoints(self):
@@ -187,6 +251,44 @@ class Arm:
         self.l2 = Point(lRs2x, lRs2y, lRs2x_, lRs2y_, self.epsilon_arm)
         self.l3 = Point(lRs3x, lRs3y, lRs3x_, lRs3y_, self.epsilon_arm)
         
+        self.midLowerArm_x = int((self.leftWrist_x + self.leftElbow_x) / 2)
+        self.midLowerArm_y = int((self.leftWrist_y + self.leftElbow_y) / 2)
+             
+        # Lower Arm
+        
+        lRs4x =  int((self.midLowerArm_x + self.leftElbow_x)/ 2)
+        lRs4y =  int((self.midLowerArm_y + self.leftElbow_y)/ 2)
+        lRs4x_ =  int((self.midLowerArm_x + self.leftElbow_x)/ 2) + diff_x
+        lRs4y_ =  int((self.midLowerArm_y + self.leftElbow_y)/ 2)
+        
+        lRs7x = self.leftElbow_x
+        lRs7x_ = self.leftElbow_x + diff_x
+        lRs7y = self.leftElbow_y
+        lRs7y_ = self.leftElbow_y
+
+        lRs5x =  self.midLowerArm_x
+        lRs5y = self.midLowerArm_y
+        lRs5x_ =  self.midLowerArm_x + diff_x
+        lRs5y_ = self.midLowerArm_y
+        
+        midRs6x_ =  int((self.midLowerArm_x + self.leftWrist_x)/ 2)
+        midRs6y_ =  int((self.midLowerArm_y + self.leftWrist_y)/ 2)
+        
+        lRs6x =  midRs6x_ 
+        lRs6y = midRs6y_
+        lRs6x_ =  midRs6x_  + diff_x
+        lRs6y_ = midRs6y_
+
+        self.l1 = Point(lRs1x, lRs1y, lRs1x_, lRs1y_, self.epsilon_arm)
+        self.l2 = Point(lRs2x, lRs2y, lRs2x_, lRs2y_, self.epsilon_arm)
+        self.l3 = Point(lRs3x, lRs3y, lRs3x_, lRs3y_, self.epsilon_arm)
+        
+        self.l4 = Point(lRs4x, lRs4y , lRs4x_, lRs4y_, self.epsilon_arm)
+        self.l5 = Point(lRs5x, lRs5y , lRs5x_, lRs5y_, self.epsilon_arm)
+        self.l6 = Point(lRs6x, lRs6y, lRs6x_, lRs6y_, self.epsilon_arm)
+        self.l7 = Point(lRs7x, lRs7y, lRs7x_, lRs7y_, self.epsilon_arm)
+
+        
     def performWarpingLeftArm(self, im):
         
         """
@@ -203,33 +305,57 @@ class Arm:
         l3x, l3y, l3x_, l3y_ = self.l3.getSourcePoints()
         d3x, d3y, d3x_, d3y_ = self.l3.getDestinationPoints()
         
+        l4x, l4y, l4x_, l4y_ = self.l4.getSourcePoints()
+        d4x, d4y, d4x_, d4y_ = self.l4.getDestinationPoints()
+        
+        l5x, l5y, l5x_, l5y_ = self.l5.getSourcePoints()
+        d5x, d5y, d5x_, d5y_ = self.l5.getDestinationPoints()
+        
+        l6x, l6y, l6x_, l6y_ = self.l6.getSourcePoints()
+        d6x, d6y, d6x_, d6y_ = self.l6.getDestinationPoints() 
+        
+        l7x, l7y, l7x_, l7y_ = self.l7.getSourcePoints()
+        d7x, d7y, d7x_, d7y_ = self.l7.getDestinationPoints() 
+        
         source_points = np.array([
         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-        
         #edited
-        [0, l1y], [0, l2y], [0, l3y],
-        [self.width, l1y_], [self.width, l2y_], [self.width, l3y_],
+        [0, l1y], [0, l2y], [0, l3y], [0, l4y], [0, l5y], [0, l6y], [0, l7y],
+        [self.width, l1y_], [self.width, l2y_], [self.width, l3y_], [self.width, l4y_], [self.width, l5y_], [self.width, l6y_], [self.width, l7y_],
         #---------------
         
         [l1x, l1y], [l1x_, l1y_],
         [l2x, l2y], [l2x_, l2y_],
-        [l3x, l3y], [l3x_, l3y_]
+        [l3x, l3y], [l3x_, l3y_],
+        
+        [l4x, l4y], [l4x_, l4y_],
+        [l5x, l5y], [l5x_, l5y_],
+        [l6x, l6y], [l6x_, l6y_],
+        [l7x, l7y], [l7x_, l7y_],
+        
         ])
         
         destination_points = np.array([
             [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
             
             #edited
-            [0, l1y], [0, l2y], [0, l3y],
-            [self.width, l1y_], [self.width, l2y_], [self.width, l3y_],
+            [0, l1y], [0, l2y], [0, l3y],  [0, l4y],  [0, l5y],  [0, l6y], [0, l7y],
+            [self.width, l1y_], [self.width, l2y_], [self.width, l3y_], [self.width, l4y_], [self.width, l5y_], [self.width, l6y_], [self.width, l7y_], 
+            #---------------
             #---------------
             
             [d1x, d1y], [d1x_, d1y_],
             [d2x, d2y], [d2x_, d2y_],
-            [d3x, d3y], [d3x_, d3y_]
+            [d3x, d3y], [d3x_, d3y_],
+            
+            [d4x, d4y], [d4x_, d4y_],
+            [d5x, d5y], [d5x_, d5y_],
+            [d6x, d6y], [d6x_, d6y_],
+            [d7x, d7y], [d7x_, d7y_]
         ])
         
         new_im = tps.warpPoints(self.im_, source_points, destination_points)  
+        
         self.im_ = new_im                
 
         return self.im_
@@ -250,35 +376,57 @@ class Arm:
         
         s3x, s3y, s3x_, s3y_ = self.r3.getSourcePoints()
         d3x, d3y, d3x_, d3y_ = self.r3.getDestinationPoints()
+        
+        s4x, s4y, s4x_, s4y_ = self.r4.getSourcePoints()
+        d4x, d4y, d4x_, d4y_ = self.r4.getDestinationPoints()
+        
+        s5x, s5y, s5x_, s5y_ = self.r5.getSourcePoints()
+        d5x, d5y, d5x_, d5y_ = self.r5.getDestinationPoints()
+        
+        s6x, s6y, s6x_, s6y_ = self.r6.getSourcePoints()
+        d6x, d6y, d6x_, d6y_ = self.r6.getDestinationPoints() 
+        
+        s7x, s7y, s7x_, s7y_ = self.r7.getSourcePoints()
+        d7x, d7y, d7x_, d7y_ = self.r7.getDestinationPoints() 
 
         source_points = np.array([
         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-        
         #edited
-        [0, s1y], [0, s2y], [0, s3y],
-        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_],
+        [0, s1y], [0, s2y], [0, s3y], [0, s4y], [0, s5y], [0, s6y], [0, s7y],
+        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_], [self.width, s4y_], [self.width, s5y_], [self.width, s6y_], [self.width, s7y_],
         #---------------
         [s1x, s1y], [s1x_, s1y_],
         [s2x, s2y], [s2x_, s2y_],
-        [s3x, s3y], [s3x_, s3y_]
+        [s3x, s3y], [s3x_, s3y_],
+        
+        [s4x, s4y], [s4x_, s4y_],
+        [s5x, s5y], [s5x_, s5y_],
+        [s6x, s6y], [s6x_, s6y_],
+        [s7x, s7y], [s7x_, s7y_]
+
         ])
         
         destination_points = np.array([
         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-        
         #edited
-        [0, s1y], [0, s2y], [0, s3y],
-        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_],
+        [0, s1y], [0, s2y], [0, s3y], [0, s4y], [0, s5y], [0, s6y], [0, s7y],
+        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_], [self.width, s4y_], [self.width, s5y_], [self.width, s6y_], [self.width, s7y_], 
         #--------------------------------
         [d1x, d1y], [d1x_, d1y_],
         [d2x, d2y], [d2x_, d2y_],
-        [d3x, d3y], [d3x_, d3y_]
+        [d3x, d3y], [d3x_, d3y_],
+        
+        [d4x, d4y], [d4x_, d4y_],
+        [d5x, d5y], [d5x_, d5y_],
+        [d6x, d6y], [d6x_, d6y_],
+        [d7x, d7y], [d7x_, d7y_]
+
         ])
         
         new_im = tps.warpPoints(self.im_, source_points, destination_points)
         
         self.im_ = new_im
-                        
+  
         return self.im_
 
     def setMiddlePointRightArm(self):
@@ -309,25 +457,48 @@ class Arm:
             r1_right_source_x, _, r1_left_source_x, _  = self.r1.getSourcePoints()
             r2_right_source_x, _, r2_left_source_x, _ =  self.r2.getSourcePoints()
             r3_right_source_x, _, r3_left_source_x, _ =  self.r3.getSourcePoints()
+            
+            r4_right_source_x, _, r4_left_source_x, _  = self.r4.getSourcePoints()
+            r5_right_source_x, _, r5_left_source_x, _ =  self.r5.getSourcePoints()
+            r6_right_source_x, _, r6_left_source_x, _ =  self.r6.getSourcePoints()
+            r7_right_source_x, _, r7_left_source_x, _ =  self.r7.getSourcePoints()
 
             d1 = r1_left_source_x - r1_right_source_x
             d2 = r2_left_source_x - r2_right_source_x
             d3 = r3_left_source_x - r3_right_source_x   
+            
+            d4 = r4_left_source_x - r4_right_source_x
+            d5 = r5_left_source_x - r5_right_source_x
+            d6 = r6_left_source_x - r6_right_source_x   
+            d7 = r7_left_source_x - r7_right_source_x   
+
             # print(f'rightArm d1 {d1} d2 {d2} d3 {d3}')
-            return d1, d2, d3
+            return d1, d2, d3, d4, d5, d6, d7
         
         elif (part == 'leftArm'):
             l1_right_source_x, _, l1_left_source_x, _  = self.l1.getSourcePoints()
             l2_right_source_x, _, l2_left_source_x, _ =  self.l2.getSourcePoints()
             l3_right_source_x, _, l3_left_source_x, _ =  self.l3.getSourcePoints()
+            
+            l4_right_source_x, _, l4_left_source_x, _  = self.l4.getSourcePoints()
+            l5_right_source_x, _, l5_left_source_x, _ =  self.l5.getSourcePoints()
+            l6_right_source_x, _, l6_left_source_x, _ =  self.l6.getSourcePoints()
+            l7_right_source_x, _, l7_left_source_x, _ =  self.l7.getSourcePoints()
+
+            
 
             d1 = l1_left_source_x - l1_right_source_x
             d2 = l2_left_source_x - l2_right_source_x
             d3 = l3_left_source_x - l3_right_source_x   
             
+            d4 = l4_left_source_x - l4_right_source_x
+            d5 = l5_left_source_x - l5_right_source_x
+            d6 = l6_left_source_x - l6_right_source_x   
+            d7 = l7_left_source_x - l7_right_source_x   
+
             # print(f'leftArm d1 {d1} d2 {d2} d3 {d3}')
 
-            return d1, d2, d3
+            return d1, d2, d3, d4, d5, d6, d7
         else:
             return None
     
@@ -336,33 +507,59 @@ class Arm:
         
         if(part == 'leftArm' or part == 'rightArm'):
             
-            d1, d2, d3 = self.getPixelDistance(part)
-            # print(f'{part} d1 {d1} d2 {d2}  d3 {d3}')
+            # print(f'{part}')
+
+            d1, d2, d3, d4, d5, d6, d7 = self.getPixelDistance(part)
             
-            per_part_d1 = int((d1 * percentage)/2)
-            per_part_d2 = int((d2 * percentage)/2)
-            per_part_d3 = int((d3 * percentage)/2)
+            per_part_d1 = pointMath.custom_round((d1 * percentage) / 2)
+            per_part_d2 = pointMath.custom_round((d2 * percentage) / 2)
+            per_part_d3 = pointMath.custom_round((d3 * percentage) / 2)
+            per_part_d4 = pointMath.custom_round((d4 * percentage) / 2)
+            per_part_d5 = pointMath.custom_round((d5 * percentage) / 2)
+            per_part_d6 = pointMath.custom_round((d6 * percentage) / 2)
+            per_part_d7 = pointMath.custom_round((d7 * percentage) / 2)
+
+
 
             if(part == 'leftArm'):
-                # print(f'epsilons {per_part_d1} {per_part_d2} {per_part_d3}')
+                # print(f'Left epsilons {per_part_d1} {per_part_d2} {per_part_d3}')
                 self.l1.setEpsilonX(per_part_d1)
                 self.l2.setEpsilonX(per_part_d2)
                 self.l3.setEpsilonX(per_part_d3)
+                self.l4.setEpsilonX(per_part_d4)
+                self.l5.setEpsilonX(per_part_d5)
+                self.l6.setEpsilonX(per_part_d6)
+                self.l7.setEpsilonX(per_part_d6)
+
                   
                 self.l1.updateDestinationPoints()
                 self.l2.updateDestinationPoints()
                 self.l3.updateDestinationPoints()
+                self.l4.updateDestinationPoints()
+                self.l5.updateDestinationPoints()
+                self.l6.updateDestinationPoints()
+                self.l7.updateDestinationPoints()
 
-            if(part == 'rightArm'):
-                
-                # print(f'epsilons {per_part_d1} {per_part_d2} {per_part_d3}')
+
+            if(part == 'rightArm'):                
+                #print(f'Right epsilons {per_part_d1} {per_part_d2} {per_part_d3}')
                 self.r1.setEpsilonX(per_part_d1)
                 self.r2.setEpsilonX(per_part_d2)
                 self.r3.setEpsilonX(per_part_d3)
+                self.r4.setEpsilonX(per_part_d4)
+                self.r5.setEpsilonX(per_part_d5)
+                self.r6.setEpsilonX(per_part_d6)
+                self.r7.setEpsilonX(per_part_d6)
+
                 
                 self.r1.updateDestinationPoints()
                 self.r2.updateDestinationPoints()
                 self.r3.updateDestinationPoints()
+                self.r4.updateDestinationPoints()
+                self.r5.updateDestinationPoints()
+                self.r6.updateDestinationPoints()
+                self.r7.updateDestinationPoints()
+
             return True
 
         else: 

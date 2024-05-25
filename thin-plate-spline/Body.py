@@ -60,7 +60,7 @@ class Body:
         self.curr_im  = img
         self.height, self.width = img.shape[:2]
         self.steps = []
-        self.step_counter = 0
+        self.step_counter = 1
         self.steps.append(self.curr_im)
         
         self.body_parts = body_parts_ 
@@ -68,10 +68,10 @@ class Body:
         self.torso = torsoFront(img, self.body_parts, 3, 3, 3, 3) # waist, belly, bust  hip
         self.leftArm = Arm(img, self.body_parts, 1)
         self.rightArm = Arm(img, self.body_parts, 1)
-        self.leftLeg = upperLeg(img, self.body_parts, 2)
-        self.rightLeg = upperLeg(img, self.body_parts, 2)
+        self.leftLeg = upperLeg(img, self.body_parts, 5)
+        self.rightLeg = upperLeg(img, self.body_parts, 5)
         self.setMaxCrop()
-       #BodyMassIndex'i girecez 22.5 > overweight aylar alt alta yazılacak  her resmin altın ay ve body mass 
+       #BodyMassIndex'i girecez 22.5 > overweight aylar alt alta yazılacak  her resmin altın ay ve body mass  badfa
         if(setByPercentage):
             percentage_torso = 0.12
             self.torso.setByPercentage('belly', percentage_torso)
@@ -79,11 +79,11 @@ class Body:
             self.torso.setByPercentage('hip', percentage_torso)
             self.torso.setByPercentage('bust', percentage_torso)
             
-            percentage_legs = 0.10
+            percentage_legs = 0.15
             self.leftLeg.setByPercentage('leftLeg', percentage_legs)
             self.rightLeg.setByPercentage('rightLeg', percentage_legs)
 
-            percentage_upperArms = 0.10
+            percentage_upperArms = 0.25
             self.leftArm.setByPercentage('leftArm', percentage_upperArms)
             self.rightArm.setByPercentage('rightArm', percentage_upperArms)
             
@@ -178,8 +178,12 @@ class Body:
     
     def warp(self, body_part):
     
-        im = self.steps[self.step_counter]
+        im = self.steps[self.step_counter - 1]
         
+        # cv2.imshow('sent', im)
+        # cv2.waitKey(0)
+        # cv2.imshow('def', self.leftArm.showLeftArmPoints())
+        # cv2.waitKey(0)
         if(body_part == "belly"):
             self.curr_im = self.torso.performHorizontalWarping('belly', im)
 
@@ -222,7 +226,7 @@ class Body:
                 cv2.waitKey(0)
     def save(self, step = 0, cropImage = False):
         if(step == 0):
-            im = self.steps[self.step_counter]
+            im = self.steps[self.step_counter - 1]
             if(cropImage):
                 self.crop(im)
             else:
