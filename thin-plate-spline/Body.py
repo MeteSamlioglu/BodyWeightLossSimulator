@@ -70,6 +70,8 @@ class Body:
         self.rightArm = Arm(img, self.body_parts, 1)
         self.leftLeg = upperLeg(img, self.body_parts, 5)
         self.rightLeg = upperLeg(img, self.body_parts, 5)
+        self.hip = upperLeg(img, self.body_parts, 5)
+        
         self.setMaxCrop()
        #BodyMassIndex'i girecez 22.5 > overweight aylar alt alta yazılacak  her resmin altın ay ve body mass  badfa
         if(setByPercentage):
@@ -78,12 +80,14 @@ class Body:
             self.torso.setByPercentage('waist', percentage_torso)
             self.torso.setByPercentage('hip', percentage_torso)
             self.torso.setByPercentage('bust', percentage_torso)
-            
+            #---------------------------------------------------------------
             percentage_legs = 0.15
             self.leftLeg.setByPercentage('leftLeg', percentage_legs)
             self.rightLeg.setByPercentage('rightLeg', percentage_legs)
-
-            percentage_upperArms = 0.25
+            self.hip.setByPercentage('hip', percentage_legs)
+            
+            #---------------------------------------------------------------
+            percentage_upperArms = 0.12
             self.leftArm.setByPercentage('leftArm', percentage_upperArms)
             self.rightArm.setByPercentage('rightArm', percentage_upperArms)
             
@@ -170,8 +174,8 @@ class Body:
             cv2.imshow('Right Leg Warping Points',im)
             cv2.waitKey(0)
         
-        if(part_body == 'legs'):
-            im = self.leftLeg.showAllLegPoints()
+        if(part_body == 'upperLegs'):
+            im = self.leftLeg.showAllPoints()
             cv2.imshow('Leg Warping Points',im)
             cv2.waitKey(0)
         

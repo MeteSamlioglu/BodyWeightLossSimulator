@@ -87,18 +87,13 @@ def body_weight_loss():
 
  
         # body.warp('leftArm')
-
+        # body.showWarpingPoints('upperLegs')
+        # body.warp('leftLeg')
+        # body.warp('rightLeg')
         # body.warp('leftArm')
-        # body.showWarpingPoints('rightArm')
-        
-        # body.showWarpingPoints('legs')
-
-        #body.warp('leftLeg')
-        #body.warp('rightLeg')
-        # body.warp('leftArm')
-        body.warp('rightArm')
-        body.warp('leftArm')
-
+        body.warp('rightLeg')
+        body.warp('leftLeg')
+        body.warp('hip')
         # body.warp('bust')
         # body.warp('belly')
         # body.warp('waist')

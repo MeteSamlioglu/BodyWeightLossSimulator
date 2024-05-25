@@ -87,6 +87,7 @@ class upperLeg:
         self.hipRight_x = int(body_parts['rightHip']['x'])    # Left Hip's x coordinate
         self.hipRight_y = int(body_parts['rightHip']['y'])    # Left Hip's y coordinate
         
+        self.hip = Point(self.hipRight_x, self.hipRight_y, self.hipLeft_x, self.hipRight_y, self.epsilon_leg)
         
         self.setHipsMiddlePoints()
         self.setRightLegPoints()
@@ -285,6 +286,45 @@ class upperLeg:
 
         return self.im_
 
+    
+    def performWarpingHip(self, im):
+        
+        """ 
+            Performs TPS on hip leg
+        """
+        self.im_ = im
+        l1x, l1y, l1x_, l1y_ = self.hip.getSourcePoints()
+        d1x, d1y, d1x_, d1y_ = self.hip.getDestinationPoints()
+
+        source_points = np.array([
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, l1y], 
+        [self.width, l1y_], 
+        #---------------
+        
+        [l1x, l1y], [l1x_, l1y_],
+        ])
+        
+        destination_points = np.array([
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, l1y], 
+        [self.width, l1y_], 
+        [d1x, d1y], [d1x_, d1y_]
+        ])
+        
+        new_im = tps.warpPoints(self.im_, source_points, destination_points)
+        
+        self.im_ = new_im                
+        
+        self.hip.updateSourcePoints()
+        self.hip.updateDestinationPoints()
+
+        return self.im_
+    
     def showRightLegPoints(self):
         """
 
@@ -299,6 +339,14 @@ class upperLeg:
         
         return copy_im
         
+    def showHipPoints(self):
+        """
+            Displays all the source and destination points on hip leg.
+        """
+        copy_im = self.im_.copy()
+        self.hip.drawPoint(copy_im)
+        return copy_im
+    
     def showLeftLegPoints(self):
         """
         
@@ -312,7 +360,7 @@ class upperLeg:
         
         return copy_im
 
-    def showAllLegPoints(self):
+    def showAllPoints(self):
         """
             Returns:
                 Returns all leg points.
@@ -325,7 +373,8 @@ class upperLeg:
         self.l1.drawPoint(copy_im)
         self.l2.drawPoint(copy_im)
         self.l3.drawPoint(copy_im)
-        
+        self.hip.drawPoint(copy_im)
+
         return copy_im
     
     def setImage(self, im):
@@ -367,8 +416,13 @@ class upperLeg:
             d3 = r3_left_source_x - r3_right_source_x   
             
             #print(f'rightLeg d1 {d1} d2 {d2} d3 {d3}')
-
             return d1, d2, d3
+        
+        elif (part == 'hip'):
+            h1_right_source_x, _, h1_left_source_x, _  = self.hip.getSourcePoints()
+            d1 = h1_left_source_x - h1_right_source_x
+            return d1
+        
         else:
             return None
     
@@ -405,7 +459,18 @@ class upperLeg:
                 self.r2.updateDestinationPoints()
                 self.r3.updateDestinationPoints()
             
+            
             return True
+        
+        elif(part == 'hip'):
+            
+            d1 = self.getPixelDistance(part)
+            per_part_d1 = pointMath.custom_round((d1 * percentage) / 2)
+            self.hip.setEpsilonX(per_part_d1)
+            self.hip.updateDestinationPoints()
+            
+            return True
+        
         else: 
             return False
         
