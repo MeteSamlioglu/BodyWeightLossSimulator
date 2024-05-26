@@ -78,27 +78,25 @@ def body_weight_loss():
         im = cv2.imread(filepath)
 
         body = Body(extracted_data, im, True)
-        # body.warp('belly')
-        # body.warp('hip')
-        # body.warp('waist')
-        # body.warp('bust')
+
         
         #body.showWarpingPoints('arms')
-
- 
-        # body.warp('leftArm')
         # body.showWarpingPoints('upperLegs')
-        # body.warp('leftLeg')
-        # body.warp('rightLeg')
+        
+        # body.warp('rightArm')
         # body.warp('leftArm')
-        body.warp('rightLeg')
-        body.warp('leftLeg')
-        body.warp('hip')
+        
+        # body.warp('rightLeg')
+        # body.warp('leftLeg')
+        # body.warp('hip')
+        
         # body.warp('bust')
         # body.warp('belly')
         # body.warp('waist')
-        # body.warp('leftLeg')
-        # body.warp('rightLeg')
+        body.warp('leftLowerLeg')
+        body.warp('rightLowerLeg')
+        
+        #body.showWarpingPoints('lowerLegs')
         
         body.save(cropImage = False)
         filepath = "uploads\edited.png"

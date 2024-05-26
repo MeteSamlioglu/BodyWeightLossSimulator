@@ -4,6 +4,8 @@ import os
 from torsoFront import torsoFront
 from Arm import Arm
 from upperLeg import upperLeg
+from lowerLeg import lowerLeg
+
 from PIL import Image
 
 # body_parts = {
@@ -66,11 +68,17 @@ class Body:
         self.body_parts = body_parts_ 
         
         self.torso = torsoFront(img, self.body_parts, 3, 3, 3, 3) # waist, belly, bust  hip
+        
         self.leftArm = Arm(img, self.body_parts, 1)
         self.rightArm = Arm(img, self.body_parts, 1)
+        
         self.leftLeg = upperLeg(img, self.body_parts, 5)
         self.rightLeg = upperLeg(img, self.body_parts, 5)
         self.hip = upperLeg(img, self.body_parts, 5)
+        
+        self.leftLowerLeg = lowerLeg(img, self.body_parts, 5)
+        self.rightLowerLeg = lowerLeg(img, self.body_parts, 5)
+
         
         self.setMaxCrop()
        #BodyMassIndex'i girecez 22.5 > overweight aylar alt alta yazılacak  her resmin altın ay ve body mass  badfa
@@ -78,18 +86,20 @@ class Body:
             percentage_torso = 0.12
             self.torso.setByPercentage('belly', percentage_torso)
             self.torso.setByPercentage('waist', percentage_torso)
-            self.torso.setByPercentage('hip', percentage_torso)
             self.torso.setByPercentage('bust', percentage_torso)
             #---------------------------------------------------------------
             percentage_legs = 0.15
             self.leftLeg.setByPercentage('leftLeg', percentage_legs)
             self.rightLeg.setByPercentage('rightLeg', percentage_legs)
             self.hip.setByPercentage('hip', percentage_legs)
-            
             #---------------------------------------------------------------
             percentage_upperArms = 0.12
             self.leftArm.setByPercentage('leftArm', percentage_upperArms)
             self.rightArm.setByPercentage('rightArm', percentage_upperArms)
+            #---------------------------------------------------------------
+            percentage_lowerLeg = 0.15
+            self.leftLowerLeg.setByPercentage('leftLeg', percentage_lowerLeg)
+            self.rightLowerLeg.setByPercentage('rightLeg', percentage_lowerLeg)
             
     def setMaxCrop(self):
         
@@ -140,7 +150,6 @@ class Body:
         cv2.imshow('Image with Keypoints', copy_im)
         cv2.waitKey(0)
         
-# body_parts['rightKnee']['x']
     
     def showWarpingPoints(self, part_body):
         
@@ -179,6 +188,20 @@ class Body:
             cv2.imshow('Leg Warping Points',im)
             cv2.waitKey(0)
         
+        if(part_body == 'lowerLegs'):
+            im = self.leftLowerLeg.showAllPoints()
+            cv2.imshow('Lower Leg Warping Points',im)
+            cv2.waitKey(0)
+        
+        if(part_body == 'rightLowerLeg'):
+            im = self.leftLowerLeg.showRightLegPoints()
+            cv2.imshow('Lower Right Leg Warping Points',im)
+            cv2.waitKey(0)
+        
+        if(part_body == 'leftLowerLeg'):
+            im = self.leftLowerLeg.showLeftLegPoints()
+            cv2.imshow('Lower Left Leg Warping Points',im)
+            cv2.waitKey(0)
     
     def warp(self, body_part):
     
@@ -212,6 +235,11 @@ class Body:
         if(body_part == 'rightLeg'):
             self.curr_im = self.rightLeg.performWarpingRightLeg(im)
         
+        if(body_part == 'rightLowerLeg'):
+            self.curr_im = self.rightLowerLeg.performWarpingRightLeg(im)
+        
+        if(body_part == 'leftLowerLeg'):
+            self.curr_im = self.leftLowerLeg.performWarpingLefttLeg(im)
         
         im = self.curr_im.copy()
         self.steps.append(im)
@@ -228,6 +256,7 @@ class Body:
                 im = self.steps[counter]
                 cv2.imshow("Body", im)
                 cv2.waitKey(0)
+                
     def save(self, step = 0, cropImage = False):
         if(step == 0):
             im = self.steps[self.step_counter - 1]

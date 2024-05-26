@@ -265,11 +265,11 @@ class torsoFront:
             return     #Exception
         
         right_source_x, right_source_y, left_source_x, left_source_y = points.getSourcePoints()
-        
         right_destination_x, right_destination_y, left_destination_x, left_destination_y = points.getDestinationPoints()
         
         right_source_x, right_source_y = int(right_source_x), int(right_source_y)
         left_source_x, left_source_y = int(left_source_x), int(left_source_y)
+        
         right_destination_x, right_destination_y = int(right_destination_x), int(right_destination_y)
         left_destination_x, left_destination_y = int(left_destination_x), int(left_destination_y)
         
@@ -282,18 +282,40 @@ class torsoFront:
             [right_destination_x, right_destination_y], [left_destination_x, left_destination_y]
         ])
         
-        # print(f'right source {right_source_x} right destination {right_destination_x}')
         copy_im = im.copy()
         new_im = tps.warpPoints(copy_im, source_points, destination_points)
         return new_im
     
-        # points.updateSourcePoints()
-        # points.updateDestinationPoints()
-       
-        # print(f'right source {right_source_x} right destination {right_destination_x}')
+    # def performWarpingAllTorso(self, im):
+    #     """
+    #         Perform warping on Torso
+            
+    #     Returns:
+    #         im: Warped Image
+    #     """
         
-        # cv2.imshow('Warped', new_im)
-        # cv2.waitKey(0)
+    #     r1x, r1y, r1x_, r1y_ = self.bust.getSourcePoints()
+    #     d1x, d1y, d1x_, d1y_ = self.bust.getDestinationPoints()
+        
+    #     r2x, r2y, r2x_, r2y_ = self.waist.getSourcePoints()
+    #     d2x, d2y, d2x_, d2y_ = self.waist.getDestinationPoints()
+        
+    #     r3x, r3y, r3x_, r3y_ = self.belly.getSourcePoints()
+    #     d3x, d3y, d3x_, d3y_ = self.belly.getDestinationPoints()
+        
+    #     source_points = np.array([
+    #         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+    #         [right_source_x, right_source_y], [left_source_x, left_source_y]
+    #     ])
+    #     destination_points = np.array([
+    #         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+    #         [right_destination_x, right_destination_y], [left_destination_x, left_destination_y]
+    #     ])
+        
+    #     copy_im = im.copy()
+    #     new_im = tps.warpPoints(copy_im, source_points, destination_points)
+    #     return new_im
+    
         
         
     def getPixelDistance(self, part):
