@@ -83,20 +83,23 @@ def body_weight_loss():
         #body.showWarpingPoints('arms')
         # body.showWarpingPoints('upperLegs')
         
-        # body.warp('rightArm')
-        # body.warp('leftArm')
-        
+
         # body.warp('rightLeg')
         # body.warp('leftLeg')
         # body.warp('hip')
         
-        # body.warp('bust')
-        # body.warp('belly')
-        # body.warp('waist')
-        body.warp('leftLowerLeg')
-        body.warp('rightLowerLeg')
+        #body.warp('bust')
+        #body.warp('belly')
+        #body.warp('waist')
+        #body.warp('leftLowerLeg')
+        #body.warp('rightLowerLeg')
         
-        #body.showWarpingPoints('lowerLegs')
+        body.showWarpingPoints('arms')
+        
+        body.warp('torso')
+        body.warp('rightArm')
+        body.warp('leftArm')
+        
         
         body.save(cropImage = False)
         filepath = "uploads\edited.png"

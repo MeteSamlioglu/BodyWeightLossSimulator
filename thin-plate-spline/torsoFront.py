@@ -275,10 +275,22 @@ class torsoFront:
         
         source_points = np.array([
             [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+            
+            #edited
+            [0, right_source_y], 
+            [self.width, left_source_y], 
+            #---------------
+            
             [right_source_x, right_source_y], [left_source_x, left_source_y]
         ])
         destination_points = np.array([
             [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+            
+            #edited
+            [0, right_source_y], 
+            [self.width, left_source_y], 
+            #---------------
+            
             [right_destination_x, right_destination_y], [left_destination_x, left_destination_y]
         ])
         
@@ -286,65 +298,86 @@ class torsoFront:
         new_im = tps.warpPoints(copy_im, source_points, destination_points)
         return new_im
     
-    # def performWarpingAllTorso(self, im):
-    #     """
-    #         Perform warping on Torso
+    def performWarpingAllTorso(self, im):
+        """
+            Perform warping on Torso
             
-    #     Returns:
-    #         im: Warped Image
-    #     """
+        Returns:
+            im: Warped Image
+        """
+        self.im_ = im
+
+        s1x, s1y, s1x_, s1y_ = self.bust.getSourcePoints()
+        d1x, d1y, d1x_, d1y_ = self.bust.getDestinationPoints()
         
-    #     r1x, r1y, r1x_, r1y_ = self.bust.getSourcePoints()
-    #     d1x, d1y, d1x_, d1y_ = self.bust.getDestinationPoints()
+        s2x, s2y, s2x_, s2y_ = self.waist.getSourcePoints()
+        d2x, d2y, d2x_, d2y_ = self.waist.getDestinationPoints()
         
-    #     r2x, r2y, r2x_, r2y_ = self.waist.getSourcePoints()
-    #     d2x, d2y, d2x_, d2y_ = self.waist.getDestinationPoints()
+        s3x, s3y, s3x_, s3y_ = self.belly.getSourcePoints()
+        d3x, d3y, d3x_, d3y_ = self.belly.getDestinationPoints()
         
-    #     r3x, r3y, r3x_, r3y_ = self.belly.getSourcePoints()
-    #     d3x, d3y, d3x_, d3y_ = self.belly.getDestinationPoints()
+        source_points = np.array([
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
         
-    #     source_points = np.array([
-    #         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-    #         [right_source_x, right_source_y], [left_source_x, left_source_y]
-    #     ])
-    #     destination_points = np.array([
-    #         [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-    #         [right_destination_x, right_destination_y], [left_destination_x, left_destination_y]
-    #     ])
+        #edited
+        [0, s1y], [0, s2y], [0, s3y],
+        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_],
+        #---------------
         
-    #     copy_im = im.copy()
-    #     new_im = tps.warpPoints(copy_im, source_points, destination_points)
-    #     return new_im
+        [s1x, s1y], [s1x_, s1y_],
+        [s2x, s2y], [s2x_, s2y_],
+        [s3x, s3y], [s3x_, s3y_]
+        ])
+        
+        destination_points = np.array([
+        [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
+        
+        #edited
+        [0, s1y], [0, s2y], [0, s3y],
+        [self.width, s1y_], [self.width, s2y_], [self.width, s3y_],
+        #---------------
+        
+        [d1x, d1y], [d1x_, d1y_],
+        [d2x, d2y], [d2x_, d2y_],
+        [d3x, d3y], [d3x_, d3y_]
+        ])
+        
+        copy_im = self.im_.copy()
+        
+        new_im = tps.warpPoints(copy_im, source_points, destination_points)
+        
+        return new_im
     
-        
         
     def getPixelDistance(self, part):
         if(part == 'belly'):
             belly_points = self.getBodyPartCoordinates('belly')
-            belly_right_source_x, belly_right_source_y, belly_left_source_x, belly_left_source_y = belly_points.getSourcePoints()
+            belly_right_source_x, _, belly_left_source_x, _ = belly_points.getSourcePoints()
             distance_pixel = belly_left_source_x - belly_right_source_x
             return distance_pixel
+        
         elif (part == 'waist'):
             waist_points = self.getBodyPartCoordinates('waist')
-            waist_right_source_x, waist_right_source_y, waist_left_source_x, waist_left_source_y = waist_points.getSourcePoints()
+            waist_right_source_x, _, waist_left_source_x, _ = waist_points.getSourcePoints()
             distance_pixel = waist_left_source_x - waist_right_source_x
             return distance_pixel
 
         elif (part == 'bust'):
             bust_points = self.getBodyPartCoordinates('bust')
-            bust_right_source_x, bust_right_source_y, bust_left_source_x, bust_left_source_y = bust_points.getSourcePoints()
+            bust_right_source_x, _, bust_left_source_x, _ = bust_points.getSourcePoints()
             distance_pixel = bust_left_source_x - bust_right_source_x
             return distance_pixel
         
         elif (part == 'hip'):
             hip_points = self.getBodyPartCoordinates('hip')
-            hip_right_source_x, hip_right_source_y, hip_left_source_x, hip_left_source_y = hip_points.getSourcePoints()
+            hip_right_source_x, _, hip_left_source_x, _ = hip_points.getSourcePoints()
             distance_pixel = hip_left_source_x - hip_right_source_x
             return distance_pixel
         else:
             return None
         
     def setByPercentage(self, part, percentage):
+        
         if(part == 'belly' or part == 'waist' or part == 'bust' or part == 'hip'):
             distance = self.getPixelDistance(part)
             per_part = int((distance * percentage)/2)
@@ -365,7 +398,8 @@ class torsoFront:
             elif(part == 'belly'):
                 self.belly.setEpsilonX(per_part)  
                 self.belly.updateDestinationPoints()
-
+     
+            return True
         else: 
             return False
     
