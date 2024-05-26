@@ -67,6 +67,7 @@ def show_detected_points(body_parts):
 # show_detected_points(body_parts)
 #height, width = im.shape[:2]
 
+MIN_ARM_DIFF = 6
 
 class Arm:
 
@@ -112,6 +113,27 @@ class Arm:
     
         return self.im_
     
+    def getDifference(self):
+        """
+            Find the optimal difference to set distance between left and right source point 
+        """
+        lRs2x = int(self.midLeftX)
+        lRs1x = int((self.leftShoulder_x + lRs2x) / 2)
+        lRs3x = int((self.leftElbow_x + self.midLeftX) / 2)
+        rRs2x_ = int(self.midRightX)
+        rRs1x_ = int((self.rightShoulder_x + rRs2x_) / 2)
+        rRs3x_ = int((self.rightElbow_x + self.midRightX) / 2)        
+
+        diffLeft = abs(lRs3x - lRs1x)
+        diffRight = abs(rRs1x_ - rRs3x_)
+
+        if(diffLeft < MIN_ARM_DIFF and diffRight < MIN_ARM_DIFF):
+            return MIN_ARM_DIFF
+        if(diffLeft <= diffRight):
+            return diffRight
+        else:
+            return diffLeft
+    
     def setRightArmPoints(self):
                 
         rRs2x_ = int(self.midRightX)
@@ -123,7 +145,8 @@ class Arm:
         rRs3x_ = int((self.rightElbow_x + self.midRightX) / 2)        
         rRs3y_ = int((self.rightElbow_y + self.midRightY) / 2)   
                 
-        diff_x = (rRs1x_ - rRs3x_)
+        diff_x = self.getDifference()
+        print(f'Right Arm diff {diff_x}')
 
         rRs1x = rRs1x_ - diff_x
         rRs2x = rRs2x_ - diff_x
@@ -237,7 +260,8 @@ class Arm:
         lRs3x = int((self.leftElbow_x + self.midLeftX) / 2)
         lRs3y = int((self.leftElbow_y + self.midLeftY) / 2)   
         
-        diff_x = (lRs3x - lRs1x)
+        diff_x = self.getDifference() 
+        print(f'Left Arm diff {diff_x}')
         
         lRs1x_ = lRs1x + diff_x
         lRs2x_ = lRs2x + diff_x

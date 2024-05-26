@@ -93,7 +93,7 @@ class Body:
             self.rightLeg.setByPercentage('rightLeg', percentage_legs)
             self.hip.setByPercentage('hip', percentage_legs)
             #---------------------------------------------------------------
-            percentage_Arms = 0.25
+            percentage_Arms = 0.15
             self.leftArm.setByPercentage('leftArm', percentage_Arms)
             self.rightArm.setByPercentage('rightArm', percentage_Arms)
             #---------------------------------------------------------------

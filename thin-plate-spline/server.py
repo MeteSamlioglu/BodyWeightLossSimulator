@@ -96,10 +96,10 @@ def body_weight_loss():
         
         body.showWarpingPoints('arms')
         
-        body.warp('torso')
+        #body.warp('torso')
+        
         body.warp('rightArm')
         body.warp('leftArm')
-        
         
         body.save(cropImage = False)
         filepath = "uploads\edited.png"
