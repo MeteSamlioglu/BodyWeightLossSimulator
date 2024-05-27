@@ -21,10 +21,10 @@ def WarpImage_TPS(source,target,img):
 	# there is a bug here, applyTransformation must receive np.float32 data type
 	f32_pts = np.zeros(source.shape, dtype=np.float32)
 	f32_pts[:] = source[:]
-	transform_cost, new_pts1 = tps.applyTransformation(f32_pts)  # e.g., 1 x 4 x 2
+	transform_cost, new_pts1 = tps.applyTransformation(f32_pts)  
 	f32_pts = np.zeros(target.shape, dtype=np.float32)
 	f32_pts[:] = target[:]
-	transform_cost, new_pts2 = tps.applyTransformation(f32_pts)  # e.g., 1 x 4 x 2
+	transform_cost, new_pts2 = tps.applyTransformation(f32_pts) 
 
 	return new_img, new_pts1, new_pts2
 

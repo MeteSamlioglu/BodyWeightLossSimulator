@@ -67,10 +67,11 @@ class Body:
         
         self.body_parts = body_parts_ 
         
-        self.torso = torsoFront(img, self.body_parts, 5, 5, 4, 3) # waist, belly, bust  hip
-        self.leftArm = Arm(img, self.body_parts, 1)
-        self.rightArm = Arm(img, self.body_parts, 1)
+        self.leftArm = Arm(img, self.body_parts, 5)
+        self.rightArm = Arm(img, self.body_parts, 5)
         
+        self.torso = torsoFront(img, self.body_parts, 5, 5, 4, 3) # waist, belly, bust  hip
+
         self.leftLeg = upperLeg(img, self.body_parts, 5)
         self.rightLeg = upperLeg(img, self.body_parts, 5)
         self.hip = upperLeg(img, self.body_parts, 5)
@@ -84,20 +85,20 @@ class Body:
         if(setByPercentage):
             #--------------------------------------------------------------- 
             percentage_bust = 0.04
-            percentage_waist = 0.12
-            percentage_belly = 0.12
+            percentage_waist = 0.16
+            percentage_belly = 0.16
             self.setAllTorsoByPercentage(percentage_bust, percentage_waist, percentage_belly)
             #---------------------------------------------------------------
-            percentage_legs = 0.15
+            percentage_legs = 0.02
             self.leftLeg.setByPercentage('leftLeg', percentage_legs)
             self.rightLeg.setByPercentage('rightLeg', percentage_legs)
             self.hip.setByPercentage('hip', percentage_legs)
             #---------------------------------------------------------------
-            percentage_Arms = 0.15
+            percentage_Arms = 0.08
             self.leftArm.setByPercentage('leftArm', percentage_Arms)
             self.rightArm.setByPercentage('rightArm', percentage_Arms)
             #---------------------------------------------------------------
-            percentage_lowerLeg = 0.15
+            percentage_lowerLeg = 0.02
             self.leftLowerLeg.setByPercentage('leftLeg', percentage_lowerLeg)
             self.rightLowerLeg.setByPercentage('rightLeg', percentage_lowerLeg)
             

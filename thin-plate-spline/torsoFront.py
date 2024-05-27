@@ -275,7 +275,7 @@ class torsoFront:
         
         source_points = np.array([
             [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-            
+
             #edited
             [0, right_source_y], 
             [self.width, left_source_y], 

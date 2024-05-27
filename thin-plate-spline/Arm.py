@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
 import os
-from torsoFront import torsoFront
+# from torsoFront import torsoFront
 
 from core import Point
 from core import tps
@@ -146,7 +146,6 @@ class Arm:
         rRs3y_ = int((self.rightElbow_y + self.midRightY) / 2)   
                 
         diff_x = self.getDifference()
-        print(f'Right Arm diff {diff_x}')
 
         rRs1x = rRs1x_ - diff_x
         rRs2x = rRs2x_ - diff_x
@@ -196,11 +195,16 @@ class Arm:
 
         
         #self.r7 = Point(rRs6x, rRs6y, rRs6x_, rRs6y_, self.epsilon_arm)
-
+    def getLeftArmPoints(self):
+        
+        return self.l1, self.l2, self.l2
+    
+    def getRightArmPoints(self):
+        
+        return self.r1, self.r2, self.r2
 
     def showRightArmPoints(self):
         copy_im = self.im_.copy()
-        print('Activated')
 
         
         self.r1.drawPoint(copy_im)
@@ -261,7 +265,6 @@ class Arm:
         lRs3y = int((self.leftElbow_y + self.midLeftY) / 2)   
         
         diff_x = self.getDifference() 
-        print(f'Left Arm diff {diff_x}')
         
         lRs1x_ = lRs1x + diff_x
         lRs2x_ = lRs2x + diff_x
