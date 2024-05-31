@@ -85,9 +85,9 @@ class Face:
         self.RightCheek = Point(rightCheek_x, rightCheek_y + offSet , rightCheek_x_, rightCheek_y_ + offSet, self.epsilon_cheeks)
         self.LeftCheek = Point(leftCheek_x, leftCheek_y + offSet , leftCheek_x_, leftCheek_y_ + offSet, self.epsilon_cheeks)
 
-        print(f'rightCheek_y {rightCheek_y} rightCheek_y_ {rightCheek_y_}')
-        print(f'leftCheek_y {leftCheek_y} leftCheek_y_ {leftCheek_y_}')
-        print(f'nose[1] {self.nose[1]}')
+        # print(f'rightCheek_y {rightCheek_y} rightCheek_y_ {rightCheek_y_}')
+        # print(f'leftCheek_y {leftCheek_y} leftCheek_y_ {leftCheek_y_}')
+        # print(f'nose[1] {self.nose[1]}')
 
         
     def getDiff(self):
@@ -118,17 +118,10 @@ class Face:
         
         n1x, n1y, n1x_, n1y_ = self.neck.getSourcePoints()
         nd1x, nd1y, nd1x_, nd1y_ = self.neck.getDestinationPoints()
-        print(f's1 {s1x} {s1y} {s1x_} {s1y_}')
-        print(f'd1 {d1x} {d1y} {d1x_} {d1y_}')
-
-        print(f's2 {s2x} {s2y} {s2x_} {s2y_}')
-        print(f'd2 {d2x} {d2y} {d2x_} {d2y_}')
-        
-        print(f'n1 {n1x} {n1y} {n1x_} {n1y_}')
-        print(f'nd1 {nd1x} {nd1y} {nd1x_} {nd1y_}')
+ 
         source_points = np.array([
             [0, 0], [self.width, 0], [0, self.height], [self.width, self.width], 
-            [0, n1y], [0, s2y], #[0, n1y],
+            [0, n1y], [0, s2y],
             [self.width, nd1y_], [self.width, d2y_], #[self.width, n1y],
             
             [s1x, s1y], #[s1x_ , s1y_], 
@@ -177,56 +170,77 @@ class Face:
         """
         return self.im_
     
-    # def getPixelDistance(self, part):
+    def getPixelDistance(self, part):
         
-    #     if(part == 'neck'):
-    #         nRx, _, nLx, _  = self.neck.getSourcePoints()
-    #         d1 = abs(nLx - nRx)
-    #         return d1
+        if(part == 'neck'):
+            nRx, _, nLx, _  = self.neck.getSourcePoints()
+            d1 = abs(nLx - nRx)
+            return d1, d1
         
-    #     elif (part == 'cheeks'):
-    #         cLx, _, cRx, _  = self.cheeks.getSourcePoints()
-    #         d1 = abs(cRx - cLx)
-    #         return d1
-        
-    #     else:
-    #         return None
-        
-    # def setByPercentage(self, part, percentage):
-        
-    #     if(part == 'neck' or part == 'cheeks'):
-    #         d1= self.getPixelDistance(part)            
-    #         per_part_d1 = pointMath.custom_round((d1 * percentage) / 2)
-            
-    #         # print(f'd1 {d1} percentage {percentage} new epsilon {per_part_d1}')
+        elif (part == 'cheeks'):
+            cRsx, _, cRsx_, _  = self.RightCheek.getSourcePoints()
+            # cRdx, _, _, _  = self.RightCheek.getDestinationPoints()
 
-    #         if(part == 'neck'):
-    #             self.neck.setEpsilonX(per_part_d1)          
-    #             self.neck.updateDestinationPoints()
+            cLx, _, cLx_, _ = self.LeftCheek.getSourcePoints() 
+            # _, _, cLdx, _ = self.LeftCheek.getDestinationPoints() 
+
+            d1 = abs(cRsx_ - cRsx)
+            d2 = abs(cLx_ - cLx)
+            return d1, d2
+        
+        else:
+            return None
+        
+    def setByPercentage(self, part, percentage):
+        
+        if(part == 'neck' or part == 'cheeks'):
+            d1, d2= self.getPixelDistance(part)            
+            per_part_d1 = pointMath.custom_round((d1 * percentage) / 2) #Righ
+            per_part_d2 = pointMath.custom_round((d2 * percentage) / 2) #Left
+
+            # print(f'd1 {d1} percentage {percentage} new epsilon {per_part_d1}')
+
+            if(part == 'neck'):
+                d1, _ = self.getPixelDistance(part)            
+                per_part_d1 = pointMath.custom_round((d1 * percentage) / 2) 
+                print(f'Epsilon  neck {per_part_d1} {per_part_d2}')
+
+                self.neck.setEpsilonX(per_part_d1)          
+                self.neck.updateDestinationPoints()
                 
-    #         if(part == 'cheeks'):
-    #             self.cheeks.setEpsilonX(per_part_d1)
-    #             self.cheeks.updateDestinationPoints()
-    #         return True
+            if(part == 'cheeks'):
+                d1, d2= self.getPixelDistance(part)            
+                # print(f' d1 {d1}  d2 {d2}')
+                per_part_d1 = pointMath.custom_round((d1 * percentage)) #Right
+                per_part_d2 = pointMath.custom_round((d2 * percentage)) #Left
+                # print(f'Epsilon  Cheek {per_part_d1} {per_part_d2}')
+                
+                self.RightCheek.setEpsilonX(per_part_d1)
+                self.LeftCheek.setEpsilonX(per_part_d2)
+                
+                self.RightCheek.updateDestinationPoints()
+                self.LeftCheek.updateDestinationPoints()
+
+            return True
         
-    #     else: 
-    #         return False
+        else: 
+            return False
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    image_path = 'samples/4.png'  # Replace with the path to your image
-    im = cv2.imread(image_path)
+#     image_path = 'samples/4.png'  # Replace with the path to your image
+#     im = cv2.imread(image_path)
     
-    face = Face(im, 10 , 10)
+#     face = Face(im, 10 , 10)
 
-    face.setByPercentage("neck", 0.14)
-    face.setByPercentage("cheeks", 0.14)
+#     face.setByPercentage("neck", 0.14)
+#     face.setByPercentage("cheeks", 0.14)
     
-    im = face.showAllPoint()
-    cv2.imshow('w', im)
-    cv2.waitKey(0)
+#     im = face.showAllPoint()
+#     cv2.imshow('w', im)
+#     cv2.waitKey(0)
     
-    im_ = face.performWarpingFace(im)
-    cv2.imshow('w', im_)
+#     im_ = face.performWarpingFace(im)
+#     cv2.imshow('w', im_)
 
-    cv2.waitKey(0)
+#     cv2.waitKey(0)

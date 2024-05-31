@@ -111,8 +111,8 @@ class Body:
             #---------------------------------------------------------------
             percentage_cheeks = 0.10
             percentage_neck = 0.10
-            # self.face.setByPercentage('cheeks', percentage_cheeks)
-            # self.face.setByPercentage('neck', percentage_neck)
+            self.face.setByPercentage('cheeks', percentage_cheeks)
+            self.face.setByPercentage('neck', percentage_neck)
 
     def setAllTorsoByPercentage(self, percentageBust, percentageWaist, percentageBelly):
         self.torso.setByPercentage('belly', percentageBelly)
