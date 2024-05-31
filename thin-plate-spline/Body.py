@@ -63,7 +63,7 @@ import os
 CROP_AMOUNT = 50
 class Body:
 
-    def __init__(self, body_parts_, detected_parts_, img, setByPercentage = False):
+    def __init__(self, body_parts_, detected_parts_, percentages_,  img, setByPercentage = False):
         self.initial_img = img.copy()
         self.curr_im  = img
         self.height, self.width = img.shape[:2]
@@ -71,6 +71,7 @@ class Body:
         self.step_counter = 1
         self.steps.append(self.curr_im)
         self.detected_parts = detected_parts_
+        self.percentages = percentages_
         self.body_parts = body_parts_ 
         
         false_parts = [part for part, is_true in self.detected_parts.items() if not is_true]
@@ -79,14 +80,6 @@ class Body:
         else:
             print('All parts are detected.')
         
-        self.percentages = {
-        'face' : 0.01, 
-        'torso': 0.04, 
-        'upperLegs': 0.02, 
-        'hips': 0.02,
-        'Arms': 0.01, 
-        'lowerLeg': 0.02
-        }
 
         # Accessing the values
         print(f'face {detected_parts_["face"]}')
@@ -146,7 +139,7 @@ class Body:
             
         """
         #Torso
-        percentage_bust = self.percentages['torso'] / 4
+        percentage_bust = self.percentages['torso']
         percentage_waist = self.percentages['torso']
         percentage_belly = self.percentages['torso']
         self.setAllTorsoByPercentage(percentage_bust, percentage_waist, percentage_belly)
@@ -195,7 +188,7 @@ class Body:
             self.warp('leftLowerLeg')      
         if(self.rightLowerLeg.isLowerLegDetected()):
             self.warp('rightLowerLeg')        
-    
+
     def setAllTorsoByPercentage(self, percentageBust, percentageWaist, percentageBelly):
         self.torso.setByPercentage('belly', percentageBelly)
         self.torso.setByPercentage('waist', percentageWaist)
@@ -374,7 +367,15 @@ class Body:
                 self.crop(im)
             else:
                 cv2.imwrite('uploads/edited.png',im)
-
+    
+    def save2(self, step = 0, cropImage = False):
+        if(step == 0):
+            im = self.steps[self.step_counter - 1]
+            if(cropImage):
+                self.crop(im)
+            else:
+                cv2.imwrite('uploads/edited2.png',im)
+    
     def crop(self,im_):
         crop_amount = 50  # Adjust as needed
         im = im_
