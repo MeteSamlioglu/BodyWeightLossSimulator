@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
-import os
 import cv2
 import numpy as np
 import json
@@ -10,6 +9,8 @@ from Arm import Arm
 from upperLeg import upperLeg
 from PIL import Image
 from Body import Body
+import os
+
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -87,18 +88,19 @@ def body_weight_loss():
 
         
         # body.showWarpingPoints('torso')
-        # body.showWarpingPoints('arms')
+        # body.showWarpingPoints('face')
 
-        body.warp('torso')
-        # body.warp('rightArm')
-        # body.warp('leftArm')
+        # body.warp('torso')
+        # # body.warp('rightArm')
+        # # body.warp('leftArm')
 
-        body.warp('rightLeg')
-        body.warp('leftLeg')
-        body.warp('leftLowerLeg')
-        body.warp('hip')
-        body.warp('rightLowerLeg')
-        
+        # body.warp('rightLeg')
+        # body.warp('leftLeg')
+        # body.warp('leftLowerLeg')
+        # body.warp('hip')
+        # body.warp('rightLowerLeg')
+        body.showWarpingPoints('face')
+        body.warp('face')
         # body.showWarpingPoints('torso')
         # body.showWarpingPoints('arms')
 

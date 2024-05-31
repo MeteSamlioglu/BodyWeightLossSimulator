@@ -6,6 +6,7 @@ import './App.css'; // Import the CSS file
 function App() {
   const imageRef = useRef(null);
   const [imageURL, setImageURL] = useState(null);
+  const [returnedImageURL, setReturnedImageURL] = useState(null);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -75,8 +76,15 @@ function App() {
         method: "POST",
         body: formData,
       });
-      const result = await response.json();
-      console.log("Data successfully sent:", result);
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      setReturnedImageURL(url);
+      console.log("Data successfully sent and received:", url);
     } catch (error) {
       console.error("Error sending data:", error);
     }
@@ -88,19 +96,35 @@ function App() {
     }
   }, [imageURL, runBodysegment]);
 
+  const handleReset = () => {
+    if (imageURL) {
+      runBodysegment();
+    }
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <div className="image-container">
-          {imageURL && (
-            <img
-              ref={imageRef}
-              src={imageURL}
-              alt="Upload Preview"
-              onLoad={runBodysegment}
-              className="uploaded-image"
-            />
-          )}
+        <div className="image-section">
+          <div className="image-container">
+            {imageURL && (
+              <img
+                ref={imageRef}
+                src={imageURL}
+                alt="Upload Preview"
+                className="uploaded-image"
+              />
+            )}
+          </div>
+          <div className="image-container">
+            {returnedImageURL && (
+              <img
+                src={returnedImageURL}
+                alt="Returned Image"
+                className="uploaded-image"
+              />
+            )}
+          </div>
         </div>
         <input
           type="file"
@@ -108,6 +132,11 @@ function App() {
           accept="image/*"
           className="file-input"
         />
+        {imageURL && (
+          <button onClick={handleReset} className="reset-button">
+            Reset
+          </button>
+        )}
       </header>
     </div>
   );

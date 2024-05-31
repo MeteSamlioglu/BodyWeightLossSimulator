@@ -1,12 +1,18 @@
 import numpy as np
 import cv2
-import os
 from torsoFront import torsoFront
 from Arm import Arm
 from upperLeg import upperLeg
 from lowerLeg import lowerLeg
-
+from face import Face
 from PIL import Image
+import os
+
+# import logging
+# import warnings
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow messages
+# logging.getLogger('tensorflow').setLevel(logging.FATAL)
+# warnings.filterwarnings("ignore", category=UserWarning, module='google.protobuf.symbol_database')
 
 # body_parts = {
     
@@ -79,7 +85,8 @@ class Body:
         self.leftLowerLeg = lowerLeg(img, self.body_parts, 5)
         self.rightLowerLeg = lowerLeg(img, self.body_parts, 5)
 
-        
+        self.face = Face(img, body_parts_, 3 , 3)
+
         self.setMaxCrop()
        #BodyMassIndex'i girecez 22.5 > overweight aylar alt alta yazılacak  her resmin altın ay ve body mass  badfa
         if(setByPercentage):
@@ -101,7 +108,12 @@ class Body:
             percentage_lowerLeg = 0.02
             self.leftLowerLeg.setByPercentage('leftLeg', percentage_lowerLeg)
             self.rightLowerLeg.setByPercentage('rightLeg', percentage_lowerLeg)
-            
+            #---------------------------------------------------------------
+            percentage_cheeks = 0.10
+            percentage_neck = 0.10
+            # self.face.setByPercentage('cheeks', percentage_cheeks)
+            # self.face.setByPercentage('neck', percentage_neck)
+
     def setAllTorsoByPercentage(self, percentageBust, percentageWaist, percentageBelly):
         self.torso.setByPercentage('belly', percentageBelly)
         self.torso.setByPercentage('waist', percentageWaist)
@@ -209,6 +221,10 @@ class Body:
             im = self.leftLowerLeg.showLeftLegPoints()
             cv2.imshow('Lower Left Leg Warping Points',im)
             cv2.waitKey(0)
+        if(part_body == 'face'):
+            im = self.face.showAllPoints()
+            cv2.imshow('Face',im)
+            cv2.waitKey(0)
     
     def warp(self, body_part):
     
@@ -245,9 +261,12 @@ class Body:
         
         if(body_part == 'rightLowerLeg'):
             self.curr_im = self.rightLowerLeg.performWarpingRightLeg(im)
-        
+    
         if(body_part == 'leftLowerLeg'):
             self.curr_im = self.leftLowerLeg.performWarpingLefttLeg(im)
+        
+        if(body_part == 'face'):
+            self.curr_im = self.face.performWarpingFace(im)
         
         im = self.curr_im.copy()
         self.steps.append(im)
