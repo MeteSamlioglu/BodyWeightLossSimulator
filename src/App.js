@@ -56,7 +56,11 @@ function App() {
       const bodyPartsData = {
         score: person.allPoses[0].score,
         keypoints: person.allPoses[0].keypoints.reduce((acc, keypoint) => {
-          acc[keypoint.part] = keypoint.position;
+          acc[keypoint.part] =
+          { 
+          position: keypoint.position,
+          score: keypoint.score                      
+          };
           return acc;
         }, {})
       };

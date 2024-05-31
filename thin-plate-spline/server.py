@@ -44,71 +44,42 @@ def body_weight_loss():
 
         if image is None:
             return jsonify({"error": "Failed to read image"}), 400
+  # Extract the necessary data from the received JSON
+        body_parts = {}
+        body_part_scores = {}
 
-        # Display the image using OpenCV
-        # cv2.imshow("Received Image", image)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        
-        # Extract the necessary data from the received JSON
-        extracted_data = {
-            'score': body_parts_data['score'],
-            'nose': body_parts_data['keypoints'].get('nose'),
-            'leftEye': body_parts_data['keypoints'].get('leftEye'),
-            'rightEye': body_parts_data['keypoints'].get('rightEye'),
-            'leftEar': body_parts_data['keypoints'].get('leftEar'),
-            'rightEar': body_parts_data['keypoints'].get('rightEar'),
-            'leftShoulder': body_parts_data['keypoints'].get('leftShoulder'),
-            'rightShoulder': body_parts_data['keypoints'].get('rightShoulder'),
-            'leftElbow': body_parts_data['keypoints'].get('leftElbow'),
-            'rightElbow': body_parts_data['keypoints'].get('rightElbow'),
-            'leftWrist': body_parts_data['keypoints'].get('leftWrist'),
-            'rightWrist': body_parts_data['keypoints'].get('rightWrist'),
-            'leftHip': body_parts_data['keypoints'].get('leftHip'),
-            'rightHip': body_parts_data['keypoints'].get('rightHip'),
-            'leftKnee': body_parts_data['keypoints'].get('leftKnee'),
-            'rightKnee': body_parts_data['keypoints'].get('rightKnee'),
-            'leftAnkle': body_parts_data['keypoints'].get('leftAnkle'),
-            'rightAnkle': body_parts_data['keypoints'].get('rightAnkle')
-        }
+        for part, data in body_parts_data['keypoints'].items():
+            body_parts[part] = data['position']
+            body_part_scores[part] = {'score': data['score']}
         
         # print("Received data:", body_parts_data)
-        print("Image saved to:", filepath)
-        
-        
-        im = cv2.imread(filepath)
+        #print("Body parts:", body_parts)
+        print("Body part scores:", body_part_scores)
+        #body.showWarpingPoints('torso')
+        #body.showWarpingPoints('face')
 
-        body = Body(extracted_data, im, True)
+        #body.warp('torso')
+        #body.warp('rightArm')
+        #body.warp('leftArm')
 
-        
+        #body.warp('rightLeg')
+        #body.warp('leftLeg')
+        #body.warp('leftLowerLeg')
+        #body.warp('hip')
+        #body.warp('rightLowerLeg')
+        #body.showWarpingPoints('face')
+        #body.warp('face')
+        #body.showWarpingPoints('torso')
         #body.showWarpingPoints('arms')
-        # body.showWarpingPoints('upperLegs')
         
-
-
-        
-        # body.showWarpingPoints('torso')
-        # body.showWarpingPoints('face')
-
-        # body.warp('torso')
-        # # body.warp('rightArm')
-        # # body.warp('leftArm')
-
-        # body.warp('rightLeg')
-        # body.warp('leftLeg')
-        # body.warp('leftLowerLeg')
-        # body.warp('hip')
-        # body.warp('rightLowerLeg')
-        body.showWarpingPoints('face')
+        body = Body(body_parts, image, True)
         body.warp('face')
-        # body.showWarpingPoints('torso')
-        # body.showWarpingPoints('arms')
-
-        body.save(cropImage = False)
-        filepath = "uploads\edited.png"
-        return send_file(filepath, mimetype='image/png')
+        body.save(cropImage=False)
+        edited_filepath = os.path.join(UPLOAD_FOLDER, "edited.png")
+        
+        return send_file(edited_filepath, mimetype='image/png')
     else:
-        return {"members": ["Member1", "Member2", "Member3"]}
+        return jsonify({"members": ["Member1", "Member2", "Member3"]})
 
 if __name__ == "__main__":
     app.run(debug=True)
