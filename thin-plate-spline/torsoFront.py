@@ -66,7 +66,7 @@ def show_detected_points(body_parts):
 
 class torsoFront:
 
-    def __init__(self,im_, body_parts_, epsilon_waist_ = 0, epsilon_belly_ = 0, epsilon_bust_ = 0, epsilon_hip_ = 0):
+    def __init__(self,im_, body_parts_, epsilon_waist_ = 0, epsilon_belly_ = 0, epsilon_bust_ = 0, epsilon_hip_ = 0, isDetected_ = True):
         
         self.im_ = im_
         self.height, self.width = self.im_.shape[:2]
@@ -76,6 +76,7 @@ class torsoFront:
         self.epsilon_bust = epsilon_bust_
         self.epsilon_hip = epsilon_hip_
         self.epsilon_shoulder = 5
+        self.isDetected = isDetected_
         
         self.body_parts = body_parts_
         
@@ -95,7 +96,10 @@ class torsoFront:
         # Initialization of parts 
         self.torsoFront_parts = [{'shoulder':self.shoulder}, {'bust':self.bust}, {'waist':self.waist}, {'belly':self.belly}, {'hip':self.hip}]
         # self.showAllPoints(self)
-        
+    
+    def isTorsoDetected(self):
+        return self.isDetected
+    
     def setShoulders(self):
         #Left Shoulder
         self.left_shoulder_x =  int(self.body_parts['leftShoulder']['x']) # Shoulder's x coordinate

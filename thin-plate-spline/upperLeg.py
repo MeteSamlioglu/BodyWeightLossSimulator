@@ -68,14 +68,15 @@ def show_detected_points(body_parts):
 
 class upperLeg:
     
-    def __init__(self,im, body_parts, epsilon_):
+    def __init__(self,im, body_parts, epsilon_, isDetected_ = True):
         
         
         self.im_ = im
         self.height, self.width = im.shape[:2]
 
         self.epsilon_leg = epsilon_
-    
+        self.isDetected = isDetected_
+        
         self.rightKnee_x =  int(body_parts['rightKnee']['x']) # Leg Knee's x coordinate
         self.rightKnee_y = int(body_parts['rightKnee']['y'])  # Leg Knee's y coordinate
         
@@ -95,6 +96,8 @@ class upperLeg:
         self.setLeftLegPoints()
                 
   
+    def isUpperLegDetected(self):
+        return self.isDetected
     
     def setHipsMiddlePoints(self):
         

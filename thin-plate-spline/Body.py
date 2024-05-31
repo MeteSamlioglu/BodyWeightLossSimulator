@@ -63,61 +63,144 @@ import os
 CROP_AMOUNT = 50
 class Body:
 
-    def __init__(self, body_parts_, img, setByPercentage = False):
+    def __init__(self, body_parts_, detected_parts_, img, setByPercentage = False):
         self.initial_img = img.copy()
         self.curr_im  = img
         self.height, self.width = img.shape[:2]
         self.steps = []
         self.step_counter = 1
         self.steps.append(self.curr_im)
-        
+        self.detected_parts = detected_parts_
         self.body_parts = body_parts_ 
         
-        self.leftArm = Arm(img, self.body_parts, 5)
-        self.rightArm = Arm(img, self.body_parts, 5)
+        false_parts = [part for part, is_true in self.detected_parts.items() if not is_true]
+        if false_parts:
+            print("False parts:", false_parts)
+        else:
+            print('All parts are detected.')
         
-        self.torso = torsoFront(img, self.body_parts, 5, 5, 4, 3) # waist, belly, bust  hip
+        self.percentages = {
+        'face' : 0.01, 
+        'torso': 0.04, 
+        'upperLegs': 0.02, 
+        'hips': 0.02,
+        'Arms': 0.01, 
+        'lowerLeg': 0.02
+        }
 
-        self.leftLeg = upperLeg(img, self.body_parts, 5)
-        self.rightLeg = upperLeg(img, self.body_parts, 5)
-        self.hip = upperLeg(img, self.body_parts, 5)
+        # Accessing the values
+        print(f'face {detected_parts_["face"]}')
+        print(f'torso {detected_parts_["torso"]}')
+        print(f'leftArm {detected_parts_["leftArm"]}')
+        print(f'rightArm {detected_parts_["rightArm"]}')
+        print(f'leftUpperLeg {detected_parts_["leftUpperLeg"]}')
+        print(f'rightUpperLeg {detected_parts_["rightUpperLeg"]}')
+        print(f'hips {detected_parts_["hips"]}')
+        print(f'leftLowerLeg {detected_parts_["leftLowerLeg"]}')
+        print(f'rightLowerLeg {detected_parts_["rightLowerLeg"]}')
         
-        self.leftLowerLeg = lowerLeg(img, self.body_parts, 5)
-        self.rightLowerLeg = lowerLeg(img, self.body_parts, 5)
+        
+        self.face = Face(img, body_parts_, 3 , 3, detected_parts_["face"])
+        self.leftArm = Arm(img, self.body_parts, 5,detected_parts_["leftArm"] )
+        self.rightArm = Arm(img, self.body_parts, 5, detected_parts_["rightArm"])
+        self.torso = torsoFront(img, self.body_parts, 5, 5, 4, 3, detected_parts_["torso"]) # waist, belly, bust  hip
+        self.leftLeg = upperLeg(img, self.body_parts, 5, detected_parts_["leftUpperLeg"] )
+        self.rightLeg = upperLeg(img, self.body_parts, 5, detected_parts_["rightUpperLeg"])
+        self.hip = upperLeg(img, self.body_parts, 5, detected_parts_["hips"])
+        self.leftLowerLeg = lowerLeg(img, self.body_parts, 5, detected_parts_["leftLowerLeg"])
+        self.rightLowerLeg = lowerLeg(img, self.body_parts, 5, detected_parts_["rightLowerLeg"])
 
-        self.face = Face(img, body_parts_, 3 , 3)
-
-        self.setMaxCrop()
+        # self.setMaxCrop()
        #BodyMassIndex'i girecez 22.5 > overweight aylar alt alta yazılacak  her resmin altın ay ve body mass  badfa
         if(setByPercentage):
-            #--------------------------------------------------------------- 
-            percentage_bust = 0.04
-            percentage_waist = 0.16
-            percentage_belly = 0.16
-            self.setAllTorsoByPercentage(percentage_bust, percentage_waist, percentage_belly)
-            #---------------------------------------------------------------
-            percentage_legs = 0.02
-            self.leftLeg.setByPercentage('leftLeg', percentage_legs)
-            self.rightLeg.setByPercentage('rightLeg', percentage_legs)
-            self.hip.setByPercentage('hip', percentage_legs)
-            #---------------------------------------------------------------
-            percentage_Arms = 0.08
-            self.leftArm.setByPercentage('leftArm', percentage_Arms)
-            self.rightArm.setByPercentage('rightArm', percentage_Arms)
-            #---------------------------------------------------------------
-            percentage_lowerLeg = 0.02
-            self.leftLowerLeg.setByPercentage('leftLeg', percentage_lowerLeg)
-            self.rightLowerLeg.setByPercentage('rightLeg', percentage_lowerLeg)
-            #---------------------------------------------------------------
-            percentage_cheeks = 0.10
-            percentage_neck = 0.10
-            self.face.setByPercentage('cheeks', percentage_cheeks)
-            self.face.setByPercentage('neck', percentage_neck)
+            self.setAllPartsByPercentage() #Set all body parts by percantage
+        # if(setByPercentage):
+        #     #--------------------------------------------------------------- 
+        #     percentage_bust = 0.04
+        #     percentage_waist = 0.16
+        #     percentage_belly = 0.16
+        #     self.setAllTorsoByPercentage(percentage_bust, percentage_waist, percentage_belly)
+        #     #---------------------------------------------------------------
+        #     percentage_legs = 0.08
+        #     self.leftLeg.setByPercentage('leftLeg', percentage_legs)
+        #     self.rightLeg.setByPercentage('rightLeg', percentage_legs)
+        #     self.hip.setByPercentage('hip', percentage_legs)
+        #     #---------------------------------------------------------------
+        #     percentage_Arms = 0.08
+        #     self.leftArm.setByPercentage('leftArm', percentage_Arms)
+        #     self.rightArm.setByPercentage('rightArm', percentage_Arms)
+        #     #---------------------------------------------------------------
+        #     percentage_lowerLeg = 0.02
+        #     self.leftLowerLeg.setByPercentage('leftLeg', percentage_lowerLeg)
+        #     self.rightLowerLeg.setByPercentage('rightLeg', percentage_lowerLeg)
+        #     #---------------------------------------------------------------
+        #     percentage_cheeks = 0.10
+        #     percentage_neck = 0.10
+        #     self.face.setByPercentage('cheeks', percentage_cheeks)
+        #     self.face.setByPercentage('neck', percentage_neck)
 
+
+    def setAllPartsByPercentage(self):
+        """
+            Sets all body parts by percentage
+            
+        """
+        #Torso
+        percentage_bust = self.percentages['torso'] / 4
+        percentage_waist = self.percentages['torso']
+        percentage_belly = self.percentages['torso']
+        self.setAllTorsoByPercentage(percentage_bust, percentage_waist, percentage_belly)
+        #---------------------------------------------------------------
+        #UpperLegs
+        percentage_upper_legs = self.percentages['upperLegs']
+        self.leftLeg.setByPercentage('leftLeg', percentage_upper_legs)
+        self.rightLeg.setByPercentage('rightLeg', percentage_upper_legs)
+        #---------------------------------------------------------------
+        #Hips
+        percentage_hips = self.percentages['hips']
+        self.hip.setByPercentage('hip', percentage_hips)
+        #---------------------------------------------------------------
+        #Arms
+        percentage_Arms = self.percentages['Arms']
+        self.leftArm.setByPercentage('leftArm', percentage_Arms)
+        self.rightArm.setByPercentage('rightArm', percentage_Arms)
+        #---------------------------------------------------------------
+        #LowerLegs
+        percentage_lowerLeg = self.percentages['lowerLeg']
+        self.leftLowerLeg.setByPercentage('leftLeg', percentage_lowerLeg)
+        self.rightLowerLeg.setByPercentage('rightLeg', percentage_lowerLeg)
+        #---------------------------------------------------------------
+        #Face
+        percentage_cheeks = self.percentages['face']
+        percentage_neck = self.percentages['face']
+        self.face.setByPercentage('cheeks', percentage_cheeks)
+        self.face.setByPercentage('neck', percentage_neck)
+    
+    def warpAllDetectedParts(self):
+        if(self.face.isFaceDetected()):
+            self.warp('face')
+        if(self.torso.isTorsoDetected()):
+            self.warp('torso')
+        if(self.leftLeg.isUpperLegDetected()):
+            self.warp('leftLeg')
+        if(self.rightLeg.isUpperLegDetected()):
+            self.warp('rightLeg')
+        if(self.hip.isUpperLegDetected()):
+            self.warp('hip')      
+        if(self.leftArm.isArmDetected()):
+            self.warp('leftArm')            
+        if(self.rightArm.isArmDetected()):
+            self.warp('rightArm')       
+        if(self.leftLowerLeg.isLowerLegDetected()):
+            self.warp('leftLowerLeg')      
+        if(self.rightLowerLeg.isLowerLegDetected()):
+            self.warp('rightLowerLeg')        
+    
     def setAllTorsoByPercentage(self, percentageBust, percentageWaist, percentageBelly):
         self.torso.setByPercentage('belly', percentageBelly)
         self.torso.setByPercentage('waist', percentageWaist)
         self.torso.setByPercentage('bust', percentageBust)
+    
     
     
     def setMaxCrop(self):

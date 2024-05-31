@@ -10,8 +10,9 @@ from upperLeg import upperLeg
 from PIL import Image
 from Body import Body
 import os
+from core import pointMath
 
-
+SCORE_TRESHOLD = 0.35
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -19,6 +20,8 @@ CORS(app)  # Enable CORS for all routes
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+    
 
 @app.route("/BodyWeightLoss", methods=['GET', 'POST'])
 def body_weight_loss():
@@ -54,14 +57,14 @@ def body_weight_loss():
         
         # print("Received data:", body_parts_data)
         #print("Body parts:", body_parts)
-        print("Body part scores:", body_part_scores)
+        detected_body_part_set = pointMath.generate_boolean_scores(body_part_scores, SCORE_TRESHOLD)
+        # print("Body part scores:", body_part_scores)
+        
         #body.showWarpingPoints('torso')
         #body.showWarpingPoints('face')
-
         #body.warp('torso')
         #body.warp('rightArm')
         #body.warp('leftArm')
-
         #body.warp('rightLeg')
         #body.warp('leftLeg')
         #body.warp('leftLowerLeg')
@@ -72,14 +75,17 @@ def body_weight_loss():
         #body.showWarpingPoints('torso')
         #body.showWarpingPoints('arms')
         
-        body = Body(body_parts, image, True)
-        body.warp('face')
+        body = Body(body_parts, detected_body_part_set, image, True)
+        # body.warp('face')
+        body.warpAllDetectedParts()
         body.save(cropImage=False)
         edited_filepath = os.path.join(UPLOAD_FOLDER, "edited.png")
         
         return send_file(edited_filepath, mimetype='image/png')
     else:
         return jsonify({"members": ["Member1", "Member2", "Member3"]})
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

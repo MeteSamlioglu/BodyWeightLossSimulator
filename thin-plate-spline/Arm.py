@@ -71,13 +71,14 @@ MIN_ARM_DIFF = 6
 
 class Arm:
 
-    def __init__(self, im_, body_parts_, epsilon_):
+    def __init__(self, im_, body_parts_, epsilon_, isDetected_ = True):
         
         self.epsilon_arm = epsilon_
         self.body_parts = body_parts_
         self.im_ = im_
         self.height, self.width = im_.shape[:2]
-
+        self.isDetected = isDetected_
+        
         self.rightShoulder_x =  int( self.body_parts['rightShoulder']['x']) #  rightShoulder's x coordinate
         self.rightShoulder_y = int( self.body_parts['rightShoulder']['y'])  # rightShoulder's y coordinate
         
@@ -108,7 +109,8 @@ class Arm:
         #self.showAllArmPoints()
         #self.performWarpingLeftArm()
         #self.performWarpingRightArm()
-
+    def isArmDetected(self):
+        return self.isDetected
     def getImage(self):
     
         return self.im_

@@ -10,13 +10,13 @@ MIN_LEG_DIFF = 6
 
 class lowerLeg:
     
-    def __init__(self,im, body_parts, epsilon_):
+    def __init__(self,im, body_parts, epsilon_, isDetected_ = True):
         
         
         self.im_ = im
         self.height, self.width = im.shape[:2]
         self.epsilon_lowerLeg = epsilon_
-    
+        self.isDetected = isDetected_
         self.rightKnee_x =  int(body_parts['rightKnee']['x']) 
         self.rightKnee_y = int(body_parts['rightKnee']['y']) 
         
@@ -33,7 +33,8 @@ class lowerLeg:
         self.setRightLegPoints()
         self.setLeftLegPoints()
                 
-  
+    def isLowerLegDetected(self):
+        return self.isDetected
         
     def setRightLegPoints(self):
         

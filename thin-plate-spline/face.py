@@ -23,11 +23,13 @@ CHIN_TIP = 152
 NOSE_TIP = 1
 MIN_DIFF = 6
 class Face:
-    def __init__(self, im_, body_parts_, epsilon_cheeks = 0, epsilon_neck = 0):
+    def __init__(self, im_, body_parts_, epsilon_cheeks = 0, epsilon_neck = 0, isDetected_ = True):
         
         self.epsilon_cheeks = epsilon_cheeks
         
         self.epsilon_neck = epsilon_neck 
+        
+        self.isDetected = isDetected_
         
         self.im_ = im_
         self.height, self.width = im_.shape[:2]
@@ -41,6 +43,8 @@ class Face:
 
         self.setFacePoints()
     
+    def isFaceDetected(self):
+        return self.isDetected
     
     def setFacePoints(self):
 
@@ -203,7 +207,7 @@ class Face:
             if(part == 'neck'):
                 d1, _ = self.getPixelDistance(part)            
                 per_part_d1 = pointMath.custom_round((d1 * percentage) / 2) 
-                print(f'Epsilon  neck {per_part_d1} {per_part_d2}')
+                # print(f'Epsilon  neck {per_part_d1} {per_part_d2}')
 
                 self.neck.setEpsilonX(per_part_d1)          
                 self.neck.updateDestinationPoints()
