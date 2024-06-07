@@ -14,6 +14,12 @@ function App() {
   const [showTable, setShowTable] = useState(false);
   const [weightLossData, setWeightLossData] = useState([]);
   const [bodyPartsData, setBodyPartsData] = useState(null);
+  const [face, setFace] = useState('');
+  const [torso, setTorso] = useState('');
+  const [upperLegs, setUpperLegs] = useState('');
+  const [hips, setHips] = useState('');
+  const [arms, setArms] = useState('');
+  const [lowerLegs, setLowerLegs] = useState('');
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -203,6 +209,41 @@ function App() {
     }
   };
 
+  const handleAdvancedSubmit = async () => {
+    if (imageURL && bodyPartsData) {
+      try {
+        const response = await fetch(imageURL);
+        const blob = await response.blob();
+
+        const formData = new FormData();
+        formData.append('face', face);
+        formData.append('torso', torso);
+        formData.append('upperLegs', upperLegs);
+        formData.append('hips', hips);
+        formData.append('arms', arms);
+        formData.append('lowerLegs', lowerLegs);
+        formData.append('image', blob, 'uploaded_image.png');
+        formData.append('data', JSON.stringify(bodyPartsData));
+
+        const uploadResponse = await fetch("http://localhost:5000/AdvancedWeightLoss", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          throw new Error("Network response was not ok");
+        }
+
+        const blobResponse = await uploadResponse.blob();
+        const url = URL.createObjectURL(blobResponse);
+        setReturnedImageURL(url);
+        console.log("Advanced weight loss data successfully sent:", url);
+      } catch (error) {
+        console.error("Error sending advanced weight loss data:", error);
+      }
+    }
+  };
+
   useEffect(() => {
     if (imageURL) {
       runBodysegment();
@@ -330,6 +371,80 @@ function App() {
                   </div>
                 )}
               </>
+            )}
+            {activeButton === 'button2' && (
+              <div className="advanced-section">
+                <h3>Advanced Weight Loss</h3>
+                <div className="advanced-form">
+                  <label>
+                    Face:
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="0.35"
+                      value={face}
+                      onChange={(e) => setFace(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Torso:
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="0.35"
+                      value={torso}
+                      onChange={(e) => setTorso(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Upper Legs:
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="0.35"
+                      value={upperLegs}
+                      onChange={(e) => setUpperLegs(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Hips:
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="0.35"
+                      value={hips}
+                      onChange={(e) => setHips(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Arms:
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="0.35"
+                      value={arms}
+                      onChange={(e) => setArms(e.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Lower Legs:
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      max="0.35"
+                      value={lowerLegs}
+                      onChange={(e) => setLowerLegs(e.target.value)}
+                    />
+                  </label>
+                  <button onClick={handleAdvancedSubmit} className="calculate-button">Compute</button>
+                </div>
+              </div>
             )}
           </div>
         </div>

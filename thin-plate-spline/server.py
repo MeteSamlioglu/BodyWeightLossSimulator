@@ -58,16 +58,16 @@ def body_weight_loss():
         
         percentages = {
             'face': 0.01, 
-            'torso': 0.04, 
-            'upperLegs': 0.02, 
+            'torso': 0.02, 
+            'upperLegs': 0.01, 
             'hips': 0.02,
-            'Arms': 0.01, 
-            'lowerLeg': 0.02
+            'Arms': 0.005, 
+            'lowerLeg': 0.01
         }
         body = Body(body_parts, detected_body_part_set, percentages, image, True)
         body.warpAllDetectedParts()
         body.save(cropImage=False)
-        edited_filepath = os.path.join(UPLOAD_FOLDER, "edited.png")
+        edited_filepath = os.path.join(UPLOAD_FOLDER, "resized_image.png")
         
         return send_file(edited_filepath, mimetype='image/png')
     else:
@@ -145,6 +145,69 @@ def upload_image():
     edited_filepath = os.path.join(UPLOAD_FOLDER, "edited.png")    
 
     return send_file(edited_filepath, mimetype='image/png')
+
+
+@app.route("/AdvancedWeightLoss", methods=['POST'])
+def advanced_weight_loss():
+    if 'image' not in request.files:
+        return jsonify({"error": "No image part"}), 400
+
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({"error": "No selected file"}), 400
+
+    face = request.form.get('face')
+    torso = request.form.get('torso')
+    upperLegs = request.form.get('upperLegs')
+    hips = request.form.get('hips')
+    arms = request.form.get('arms')
+    lowerLegs = request.form.get('lowerLegs')
+
+    if not all([face, torso, upperLegs, hips, arms, lowerLegs]):
+        return jsonify({"error": "Missing percentage values"}), 400
+
+    body_parts_data = request.form.get('data')
+    if not body_parts_data:
+        return jsonify({"error": "No body parts data"}), 400
+
+    body_parts_data = json.loads(body_parts_data)
+
+    filename = secure_filename(file.filename)
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(filepath)
+    
+    filepath = "uploads/resized_image.png"
+
+    image = cv2.imread(filepath)
+
+    if image is None:
+        return jsonify({"error": "Failed to read image"}), 400
+    
+    body_parts = {}
+    body_part_scores = {}
+
+    for part, data in body_parts_data['keypoints'].items():
+        body_parts[part] = data['position']
+        body_part_scores[part] = {'score': data['score']}
+    
+    detected_body_part_set = pointMath.generate_boolean_scores(body_part_scores, SCORE_TRESHOLD)
+
+    percentages = {
+        'face': float(face), 
+        'torso': float(torso), 
+        'upperLegs': float(upperLegs), 
+        'hips': float(hips),
+        'Arms': float(arms), 
+        'lowerLeg': float(lowerLegs)
+    }
+    print(f'face {float(face)} torso {float(torso)} upperLegs {float(upperLegs)} hips {float(hips)}  Arms {float(arms)} lowerLeg{float(lowerLegs)}')
+    body = Body(body_parts, detected_body_part_set, percentages, image, True)
+    body.warpAllDetectedParts()
+    body.save(cropImage=False)
+    edited_filepath = os.path.join(UPLOAD_FOLDER, "edited.png")
+
+    return send_file(edited_filepath, mimetype='image/png')
+
 
 if __name__ == "__main__":
     app.run(debug=True)

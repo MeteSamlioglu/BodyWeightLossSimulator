@@ -109,25 +109,25 @@ class Body:
             self.setAllPartsByPercentage() #Set all body parts by percantage
         # if(setByPercentage):
         #     #--------------------------------------------------------------- 
-        #     percentage_bust = 0.04
-        #     percentage_waist = 0.16
-        #     percentage_belly = 0.16
+        #     percentage_bust = 0.01
+        #     percentage_waist = 0.01
+        #     percentage_belly = 0.01
         #     self.setAllTorsoByPercentage(percentage_bust, percentage_waist, percentage_belly)
         #     #---------------------------------------------------------------
-        #     percentage_legs = 0.08
+        #     percentage_legs = 0.02
         #     self.leftLeg.setByPercentage('leftLeg', percentage_legs)
         #     self.rightLeg.setByPercentage('rightLeg', percentage_legs)
         #     self.hip.setByPercentage('hip', percentage_legs)
         #     #---------------------------------------------------------------
-        #     percentage_Arms = 0.08
+        #     percentage_Arms = 0.02
         #     self.leftArm.setByPercentage('leftArm', percentage_Arms)
         #     self.rightArm.setByPercentage('rightArm', percentage_Arms)
         #     #---------------------------------------------------------------
-        #     percentage_lowerLeg = 0.02
+        #     percentage_lowerLeg = 0.01
         #     self.leftLowerLeg.setByPercentage('leftLeg', percentage_lowerLeg)
         #     self.rightLowerLeg.setByPercentage('rightLeg', percentage_lowerLeg)
         #     #---------------------------------------------------------------
-        #     percentage_cheeks = 0.10
+        #     percentage_cheeks = 0.20
         #     percentage_neck = 0.10
         #     self.face.setByPercentage('cheeks', percentage_cheeks)
         #     self.face.setByPercentage('neck', percentage_neck)

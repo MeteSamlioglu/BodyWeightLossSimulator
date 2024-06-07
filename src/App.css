@@ -153,3 +153,33 @@
   border-radius: 3px;
   color: white;
 }
+
+.advanced-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px; /* Adjust top margin */
+}
+
+.advanced-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.advanced-form label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+  font-size: 16px;
+  color: white;
+}
+
+.advanced-form input {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 5px;
+}

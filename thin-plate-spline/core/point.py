@@ -34,8 +34,8 @@ class Point:
             Returns:
                 Returns the epsilon on X axi
         """
-        if(epsilon_ == 0):
-            epsilon_+= 1
+        # if(epsilon_ == 0):
+        #     epsilon_+= 1
             
         self.epsilon_x = epsilon_
     
