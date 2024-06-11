@@ -150,10 +150,12 @@ def upload_image():
 @app.route("/AdvancedWeightLoss", methods=['POST'])
 def advanced_weight_loss():
     if 'image' not in request.files:
+        print("No image part in request files")
         return jsonify({"error": "No image part"}), 400
 
     file = request.files['image']
     if file.filename == '':
+        print("No selected file")
         return jsonify({"error": "No selected file"}), 400
 
     face = request.form.get('face')
@@ -163,11 +165,15 @@ def advanced_weight_loss():
     arms = request.form.get('arms')
     lowerLegs = request.form.get('lowerLegs')
 
+    print("Received values:", face, torso, upperLegs, hips, arms, lowerLegs)
+
     if not all([face, torso, upperLegs, hips, arms, lowerLegs]):
+        print("Missing percentage values")
         return jsonify({"error": "Missing percentage values"}), 400
 
     body_parts_data = request.form.get('data')
     if not body_parts_data:
+        print("No body parts data")
         return jsonify({"error": "No body parts data"}), 400
 
     body_parts_data = json.loads(body_parts_data)
@@ -175,14 +181,14 @@ def advanced_weight_loss():
     filename = secure_filename(file.filename)
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     file.save(filepath)
-    
-    filepath = "uploads/resized_image.png"
 
     image = cv2.imread(filepath)
+    print(f'File saved to {filepath}')
 
     if image is None:
+        print("Failed to read image")
         return jsonify({"error": "Failed to read image"}), 400
-    
+
     body_parts = {}
     body_part_scores = {}
 
@@ -200,7 +206,8 @@ def advanced_weight_loss():
         'Arms': float(arms), 
         'lowerLeg': float(lowerLegs)
     }
-    print(f'face {float(face)} torso {float(torso)} upperLegs {float(upperLegs)} hips {float(hips)}  Arms {float(arms)} lowerLeg{float(lowerLegs)}')
+    print(f'face {float(face)} torso {float(torso)} upperLegs {float(upperLegs)} hips {float(hips)}  Arms {float(arms)} lowerLeg {float(lowerLegs)}')
+    
     body = Body(body_parts, detected_body_part_set, percentages, image, True)
     body.warpAllDetectedParts()
     body.save(cropImage=False)

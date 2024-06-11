@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; /* Adjusted to start from the top */
+  justify-content: flex-start;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -18,14 +18,14 @@
 
 .content {
   display: flex;
-  align-items: flex-start; /* Align items to the start (top) */
+  align-items: flex-start;
   margin-top: 20px;
 }
 
-.image-section {
+.left-section {
   display: flex;
-  flex-direction: row;
-  align-items: flex-start; /* Align items to the start (top) */
+  flex-direction: column;
+  align-items: center;
   margin-right: 20px;
 }
 
@@ -38,18 +38,17 @@
 
 .image-container {
   position: relative;
-  width: 400px; /* Increased width */
-  height: 600px; /* Increased height */
+  width: 400px;
+  height: 600px;
   border: 2px solid #61dafb;
   border-radius: 10px;
   padding: 10px;
   background-color: white;
   overflow: hidden;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 10px; /* Adjusted margin */
+  margin: 0 10px;
 }
 
 .uploaded-image {
@@ -62,10 +61,10 @@
 .button-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px; /* Adjust bottom margin to position next to the section */
+  margin-top: 20px;
 }
 
-.toggle-button, .new-button, .calculate-button {
+.toggle-button, .new-button, .calculate-button, .submit-button {
   margin-top: 10px;
   padding: 10px 20px;
   font-size: 16px;
@@ -77,7 +76,7 @@
 }
 
 .toggle-button.active, .new-button.active {
-  background-color: #ff5733; /* Change to active color */
+  background-color: #ff5733;
 }
 
 .reset-button {
@@ -95,7 +94,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 20px; /* Adjust top margin to place it lower */
+  margin-top: 20px;
 }
 
 .bmi-form {
@@ -119,7 +118,7 @@
 
 .bmi-table {
   margin-top: 20px;
-  max-width: 500px; /* Reduced width to fit inside the page */
+  max-width: 500px;
 }
 
 .bmi-table table {
@@ -154,32 +153,58 @@
   color: white;
 }
 
+.right-section {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scrollable-container {
+  display: flex;
+  overflow-x: auto;
+  width: 850px; /* Fixed width for the scrollable section */
+  height: 620px; /* Fixed height for the scrollable section */
+  border: 2px solid #61dafb;
+  border-radius: 10px;
+  background-color: white;
+  padding: 10px;
+}
+
+.scrollable-container .image-container {
+  flex-shrink: 0;
+  width: 400px;
+  height: 600px;
+  margin-right: 20px;
+}
+
 .advanced-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px; /* Adjust top margin */
+  margin-top: 20px;
 }
 
-.advanced-form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.advanced-section h3 {
+  margin-bottom: 20px;
 }
 
-.advanced-form label {
+.advanced-section .input-group {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: 10px;
-  font-size: 16px;
-  color: white;
+  margin-bottom: 10px;
 }
 
-.advanced-form input {
+.advanced-section .input-group label {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.advanced-section .input-group input {
+  width: 200px;
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  margin-top: 5px;
 }

@@ -6,7 +6,7 @@ import './App.css'; // Import the CSS file
 function App() {
   const imageRef = useRef(null);
   const [imageURL, setImageURL] = useState(null);
-  const [returnedImageURL, setReturnedImageURL] = useState(null);
+  const [returnedImages, setReturnedImages] = useState([]);
   const [activeButton, setActiveButton] = useState(null);
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
@@ -14,58 +14,44 @@ function App() {
   const [showTable, setShowTable] = useState(false);
   const [weightLossData, setWeightLossData] = useState([]);
   const [bodyPartsData, setBodyPartsData] = useState(null);
-  const [face, setFace] = useState('');
-  const [torso, setTorso] = useState('');
-  const [upperLegs, setUpperLegs] = useState('');
-  const [hips, setHips] = useState('');
-  const [arms, setArms] = useState('');
-  const [lowerLegs, setLowerLegs] = useState('');
+  const [advancedInputs, setAdvancedInputs] = useState({
+    face: 0.01,
+    torso: 0.02,
+    upperLegs: 0.01,
+    hips: 0.02,
+    arms: 0.005,
+    lowerLeg: 0.01,
+  });
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (!file) {
-      // No file selected, return early
       return;
     }
 
     const reader = new FileReader();
-
     reader.onload = function (e) {
       setImageURL(e.target.result);
     };
-
     reader.readAsDataURL(file);
   };
-
-  const runBodysegment = useCallback(async () => {
-    if (imageRef.current) {
-      const net = await bodyPix.load();
-      console.log("BodyPix model loaded.");
-      detect(net);
-    }
-  }, []);
 
   const detect = async (net) => {
     const image = imageRef.current;
 
-    // Use the image's rendered dimensions
     const imageWidth = image.clientWidth;
     const imageHeight = image.clientHeight;
 
-    // Set a temporary canvas to match the image's displayed dimensions
     const tempCanvas = document.createElement('canvas');
     tempCanvas.width = imageWidth;
     tempCanvas.height = imageHeight;
     const ctx = tempCanvas.getContext('2d');
     ctx.drawImage(image, 0, 0, imageWidth, imageHeight);
 
-    // Convert the canvas to a Blob (resized image)
     tempCanvas.toBlob(async (blob) => {
-      // Make detections
       const person = await net.segmentPersonParts(tempCanvas);
       console.log(person);
 
-      // Extract and format the required data
       const bodyPartsData = {
         score: person.allPoses[0].score,
         keypoints: person.allPoses[0].keypoints.reduce((acc, keypoint) => {
@@ -78,11 +64,17 @@ function App() {
       };
 
       setBodyPartsData(bodyPartsData);
-
-      // Send the JSON data and the resized image to the Flask server
       postBodyPartsData(bodyPartsData, blob);
     }, 'image/png');
   };
+
+  const runBodysegment = useCallback(async () => {
+    if (imageRef.current) {
+      const net = await bodyPix.load();
+      console.log("BodyPix model loaded.");
+      detect(net);
+    }
+  }, []);
 
   const postBodyPartsData = async (bodyPartsData, imageBlob) => {
     const formData = new FormData();
@@ -101,7 +93,7 @@ function App() {
 
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
-      setReturnedImageURL(url);
+      setReturnedImages([url]);
       console.log("Data successfully sent and received:", url);
     } catch (error) {
       console.error("Error sending data:", error);
@@ -201,7 +193,7 @@ function App() {
 
         const blobResponse = await uploadResponse.blob();
         const url = URL.createObjectURL(blobResponse);
-        setReturnedImageURL(url);
+        setReturnedImages((prev) => [...prev, url]);
         console.log("Image, month, and body parts data successfully sent:", url);
       } catch (error) {
         console.error("Error sending image, month, and body parts data:", error);
@@ -209,38 +201,51 @@ function App() {
     }
   };
 
-  const handleAdvancedSubmit = async () => {
-    if (imageURL && bodyPartsData) {
-      try {
-        const response = await fetch(imageURL);
-        const blob = await response.blob();
+  const handleAdvancedInputChange = (event) => {
+    const { name, value } = event.target;
+    setAdvancedInputs((prevInputs) => ({
+      ...prevInputs,
+      [name]: value,
+    }));
+  };
 
-        const formData = new FormData();
-        formData.append('face', face);
-        formData.append('torso', torso);
-        formData.append('upperLegs', upperLegs);
-        formData.append('hips', hips);
-        formData.append('arms', arms);
-        formData.append('lowerLegs', lowerLegs);
-        formData.append('image', blob, 'uploaded_image.png');
-        formData.append('data', JSON.stringify(bodyPartsData));
+  const handleAdvancedSubmit = async (event) => {
+    event.preventDefault();
+    
+    if (!imageURL || !bodyPartsData) {
+      console.error("Image or body parts data not available.");
+      return;
+    }
 
-        const uploadResponse = await fetch("http://localhost:5000/AdvancedWeightLoss", {
-          method: "POST",
-          body: formData,
-        });
+    try {
+      const imageResponse = await fetch(imageURL);
+      const blob = await imageResponse.blob();
 
-        if (!uploadResponse.ok) {
-          throw new Error("Network response was not ok");
-        }
+      const formData = new FormData();
+      formData.append('image', blob, 'uploaded_image.png');
+      formData.append('data', JSON.stringify(bodyPartsData));
+      formData.append('face', advancedInputs.face);
+      formData.append('torso', advancedInputs.torso);
+      formData.append('upperLegs', advancedInputs.upperLegs);
+      formData.append('hips', advancedInputs.hips);
+      formData.append('arms', advancedInputs.arms);
+      formData.append('lowerLegs', advancedInputs.lowerLeg);
 
-        const blobResponse = await uploadResponse.blob();
-        const url = URL.createObjectURL(blobResponse);
-        setReturnedImageURL(url);
-        console.log("Advanced weight loss data successfully sent:", url);
-      } catch (error) {
-        console.error("Error sending advanced weight loss data:", error);
+      const response = await fetch("http://localhost:5000/AdvancedWeightLoss", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
+
+      const blobResponse = await response.blob();
+      const url = URL.createObjectURL(blobResponse);
+      setReturnedImages([url]);  // Update the first image in the rectangle
+      console.log("Advanced data successfully sent and received:", url);
+    } catch (error) {
+      console.error("Error sending advanced data:", error);
     }
   };
 
@@ -273,7 +278,7 @@ function App() {
           )}
         </div>
         <div className="content">
-          <div className="image-section">
+          <div className="left-section">
             <div className="image-container">
               {imageURL && (
                 <img
@@ -284,17 +289,6 @@ function App() {
                 />
               )}
             </div>
-            <div className="image-container">
-              {returnedImageURL && (
-                <img
-                  src={returnedImageURL}
-                  alt="Returned Image"
-                  className="uploaded-image"
-                />
-              )}
-            </div>
-          </div>
-          <div className="right-section">
             <div className="button-group">
               <button
                 onClick={() => handleButtonClick('button1')}
@@ -375,77 +369,74 @@ function App() {
             {activeButton === 'button2' && (
               <div className="advanced-section">
                 <h3>Advanced Weight Loss</h3>
-                <div className="advanced-form">
-                  <label>
-                    Face:
+                <form onSubmit={handleAdvancedSubmit}>
+                  <div className="input-group">
+                    <label>Face:</label>
                     <input
                       type="number"
-                      step="0.01"
-                      min="0"
-                      max="0.35"
-                      value={face}
-                      onChange={(e) => setFace(e.target.value)}
+                      name="face"
+                      value={advancedInputs.face}
+                      onChange={handleAdvancedInputChange}
                     />
-                  </label>
-                  <label>
-                    Torso:
+                  </div>
+                  <div className="input-group">
+                    <label>Torso:</label>
                     <input
                       type="number"
-                      step="0.01"
-                      min="0"
-                      max="0.35"
-                      value={torso}
-                      onChange={(e) => setTorso(e.target.value)}
+                      name="torso"
+                      value={advancedInputs.torso}
+                      onChange={handleAdvancedInputChange}
                     />
-                  </label>
-                  <label>
-                    Upper Legs:
+                  </div>
+                  <div className="input-group">
+                    <label>Upper Legs:</label>
                     <input
                       type="number"
-                      step="0.01"
-                      min="0"
-                      max="0.35"
-                      value={upperLegs}
-                      onChange={(e) => setUpperLegs(e.target.value)}
+                      name="upperLegs"
+                      value={advancedInputs.upperLegs}
+                      onChange={handleAdvancedInputChange}
                     />
-                  </label>
-                  <label>
-                    Hips:
+                  </div>
+                  <div className="input-group">
+                    <label>Hips:</label>
                     <input
                       type="number"
-                      step="0.01"
-                      min="0"
-                      max="0.35"
-                      value={hips}
-                      onChange={(e) => setHips(e.target.value)}
+                      name="hips"
+                      value={advancedInputs.hips}
+                      onChange={handleAdvancedInputChange}
                     />
-                  </label>
-                  <label>
-                    Arms:
+                  </div>
+                  <div className="input-group">
+                    <label>Arms:</label>
                     <input
                       type="number"
-                      step="0.01"
-                      min="0"
-                      max="0.35"
-                      value={arms}
-                      onChange={(e) => setArms(e.target.value)}
+                      name="arms"
+                      value={advancedInputs.arms}
+                      onChange={handleAdvancedInputChange}
                     />
-                  </label>
-                  <label>
-                    Lower Legs:
+                  </div>
+                  <div className="input-group">
+                    <label>Lower Legs:</label>
                     <input
                       type="number"
-                      step="0.01"
-                      min="0"
-                      max="0.35"
-                      value={lowerLegs}
-                      onChange={(e) => setLowerLegs(e.target.value)}
+                      name="lowerLeg"
+                      value={advancedInputs.lowerLeg}
+                      onChange={handleAdvancedInputChange}
                     />
-                  </label>
-                  <button onClick={handleAdvancedSubmit} className="calculate-button">Compute</button>
-                </div>
+                  </div>
+                  <button type="submit" className="submit-button">Compute</button>
+                </form>
               </div>
             )}
+          </div>
+          <div className="right-section">
+            <div className="scrollable-container">
+              {returnedImages.map((url, index) => (
+                <div className="image-container" key={index}>
+                  <img src={url} alt="Returned Image" className="uploaded-image" />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </header>
