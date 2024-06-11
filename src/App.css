@@ -181,30 +181,35 @@
 .advanced-section {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 20px;
-}
-
-.advanced-section h3 {
-  margin-bottom: 20px;
 }
 
 .advanced-section .input-group {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   margin-bottom: 10px;
 }
 
-.advanced-section .input-group label {
+.advanced-section label {
   margin-bottom: 5px;
   font-size: 16px;
+  color: white;
 }
 
-.advanced-section .input-group input {
-  width: 200px;
+.advanced-section input {
   padding: 10px;
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.advanced-section .submit-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #61dafb;
+  border: none;
+  border-radius: 5px;
+  color: white;
 }

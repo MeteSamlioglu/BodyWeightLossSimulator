@@ -10,6 +10,7 @@ function App() {
   const [activeButton, setActiveButton] = useState(null);
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
+  const [desiredBmi, setDesiredBmi] = useState(22.5); // New state for desired BMI
   const [bmi, setBmi] = useState(null);
   const [showTable, setShowTable] = useState(false);
   const [weightLossData, setWeightLossData] = useState([]);
@@ -119,6 +120,10 @@ function App() {
     setWeight(event.target.value);
   };
 
+  const handleDesiredBmiChange = (event) => {
+    setDesiredBmi(event.target.value);
+  };
+
   const calculateBmi = (weight) => {
     const heightInMeters = height / 100;
     return (weight / (heightInMeters * heightInMeters)).toFixed(2);
@@ -143,7 +148,7 @@ function App() {
     };
 
     for (const month of months) {
-      if (calculateBmi(currentWeight) <= 22.5) break;
+      if (calculateBmi(currentWeight) <= desiredBmi) break;
 
       const period = month === 1 ? 1 : month / 3;
 
@@ -321,6 +326,12 @@ function App() {
                       placeholder="Weight (kg)"
                       value={weight}
                       onChange={handleWeightChange}
+                    />
+                    <input
+                      type="number"
+                      placeholder="Desired BMI"
+                      value={desiredBmi}
+                      onChange={handleDesiredBmiChange}
                     />
                     <button onClick={handleCalculateBmi} className="calculate-button">Calculate</button>
                     {bmi && (
