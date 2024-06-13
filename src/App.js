@@ -210,7 +210,7 @@ function App() {
     const { name, value } = event.target;
     setAdvancedInputs((prevInputs) => ({
       ...prevInputs,
-      [name]: value,
+      [name]: parseFloat(value), // Ensure value is a float
     }));
   };
 
@@ -263,6 +263,14 @@ function App() {
   const handleReset = () => {
     if (imageURL) {
       runBodysegment();
+    }
+  };
+
+  const handleShowAllClick = async () => {
+    const buttons = document.querySelectorAll('.bmi-table button');
+    for (let i = 0; i < buttons.length; i++) {
+      buttons[i].click();
+      await new Promise((resolve) => setTimeout(resolve, 500)); // Delay for 500ms between clicks
     }
   };
 
@@ -342,38 +350,41 @@ function App() {
                   </div>
                 </div>
                 {showTable && (
-                  <div className="bmi-table">
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Month</th>
-                          <th>Torso</th>
-                          <th>Hip and Thigh</th>
-                          <th>Legs</th>
-                          <th>Face and Neck</th>
-                          <th>Arms</th>
-                          <th>Total Weight</th>
-                          <th>BMI</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {weightLossData.map((row, index) => (
-                          <tr key={index}>
-                            <td>{row.month}</td>
-                            <td>{row.torso}</td>
-                            <td>{row.hipAndThigh}</td>
-                            <td>{row.legs}</td>
-                            <td>{row.faceAndNeck}</td>
-                            <td>{row.arms}</td>
-                            <td>{row.totalWeight}</td>
-                            <td>{row.bmi}</td>
-                            <td><button onClick={() => handleShowClick(row.month)}>Show</button></td>
+                  <>
+                    <div className="bmi-table">
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Month</th>
+                            <th>Torso</th>
+                            <th>Hip and Thigh</th>
+                            <th>Legs</th>
+                            <th>Face and Neck</th>
+                            <th>Arms</th>
+                            <th>Total Weight</th>
+                            <th>BMI</th>
+                            <th>Action</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                        </thead>
+                        <tbody>
+                          {weightLossData.map((row, index) => (
+                            <tr key={index}>
+                              <td>{row.month}</td>
+                              <td>{row.torso}</td>
+                              <td>{row.hipAndThigh}</td>
+                              <td>{row.legs}</td>
+                              <td>{row.faceAndNeck}</td>
+                              <td>{row.arms}</td>
+                              <td>{row.totalWeight}</td>
+                              <td>{row.bmi}</td>
+                              <td><button onClick={() => handleShowClick(row.month)}>Show</button></td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <button onClick={handleShowAllClick} className="show-all-button">Show All</button>
+                  </>
                 )}
               </>
             )}
@@ -386,6 +397,7 @@ function App() {
                     <input
                       type="number"
                       name="face"
+                      step="0.01"
                       value={advancedInputs.face}
                       onChange={handleAdvancedInputChange}
                     />
@@ -395,6 +407,7 @@ function App() {
                     <input
                       type="number"
                       name="torso"
+                      step="0.01"
                       value={advancedInputs.torso}
                       onChange={handleAdvancedInputChange}
                     />
@@ -404,6 +417,7 @@ function App() {
                     <input
                       type="number"
                       name="upperLegs"
+                      step="0.01"
                       value={advancedInputs.upperLegs}
                       onChange={handleAdvancedInputChange}
                     />
@@ -413,6 +427,7 @@ function App() {
                     <input
                       type="number"
                       name="hips"
+                      step="0.01"
                       value={advancedInputs.hips}
                       onChange={handleAdvancedInputChange}
                     />
@@ -422,6 +437,7 @@ function App() {
                     <input
                       type="number"
                       name="arms"
+                      step="0.01"
                       value={advancedInputs.arms}
                       onChange={handleAdvancedInputChange}
                     />
@@ -431,6 +447,7 @@ function App() {
                     <input
                       type="number"
                       name="lowerLeg"
+                      step="0.01"
                       value={advancedInputs.lowerLeg}
                       onChange={handleAdvancedInputChange}
                     />

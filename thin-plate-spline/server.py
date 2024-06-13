@@ -174,8 +174,10 @@ def advanced_weight_loss():
     filename = secure_filename(file.filename)
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     file.save(filepath)
+    
+    filepath = "uploads/resized_image.png"
     image = cv2.imread(filepath)
-    print(f'File saved to {filepath}')
+        
     if image is None:
         print("Failed to read image")
         return jsonify({"error": "Failed to read image"}), 400
@@ -200,7 +202,6 @@ def advanced_weight_loss():
     body.save(cropImage=False)
     edited_filepath = os.path.join(UPLOAD_FOLDER, "edited.png")
     return send_file(edited_filepath, mimetype='image/png')
-
 
 if __name__ == "__main__":
     app.run(debug=True)

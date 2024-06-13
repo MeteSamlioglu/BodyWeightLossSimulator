@@ -64,7 +64,7 @@
   margin-top: 20px;
 }
 
-.toggle-button, .new-button, .calculate-button, .submit-button {
+.toggle-button, .new-button, .calculate-button, .submit-button, .show-all-button {
   margin-top: 10px;
   padding: 10px 20px;
   font-size: 16px;
@@ -118,7 +118,7 @@
 
 .bmi-table {
   margin-top: 20px;
-  max-width: 500px;
+  max-width: 800px;
 }
 
 .bmi-table table {
