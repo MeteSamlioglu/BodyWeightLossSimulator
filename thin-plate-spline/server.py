@@ -12,7 +12,7 @@ from Body import Body
 import os
 from core import pointMath
 
-SCORE_TRESHOLD = 0.35
+SCORE_TRESHOLD = 0.85
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
@@ -138,7 +138,7 @@ def upload_image():
     if(month == "24th"):
         x = 7  
     updated_percentages = {key: value * x for key, value in percentages.items()}
-
+    
     body2 = Body(body_parts, detected_body_part_set, updated_percentages, image, True)
     body2.warpAllDetectedParts()
     body2.save(cropImage=False)
@@ -152,52 +152,40 @@ def advanced_weight_loss():
     if 'image' not in request.files:
         print("No image part in request files")
         return jsonify({"error": "No image part"}), 400
-
     file = request.files['image']
     if file.filename == '':
         print("No selected file")
         return jsonify({"error": "No selected file"}), 400
-
     face = request.form.get('face')
     torso = request.form.get('torso')
     upperLegs = request.form.get('upperLegs')
     hips = request.form.get('hips')
     arms = request.form.get('arms')
     lowerLegs = request.form.get('lowerLegs')
-
     print("Received values:", face, torso, upperLegs, hips, arms, lowerLegs)
-
     if not all([face, torso, upperLegs, hips, arms, lowerLegs]):
         print("Missing percentage values")
         return jsonify({"error": "Missing percentage values"}), 400
-
     body_parts_data = request.form.get('data')
     if not body_parts_data:
         print("No body parts data")
         return jsonify({"error": "No body parts data"}), 400
-
     body_parts_data = json.loads(body_parts_data)
-
     filename = secure_filename(file.filename)
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     file.save(filepath)
-
     image = cv2.imread(filepath)
     print(f'File saved to {filepath}')
-
     if image is None:
         print("Failed to read image")
         return jsonify({"error": "Failed to read image"}), 400
-
     body_parts = {}
     body_part_scores = {}
-
     for part, data in body_parts_data['keypoints'].items():
         body_parts[part] = data['position']
         body_part_scores[part] = {'score': data['score']}
-    
-    detected_body_part_set = pointMath.generate_boolean_scores(body_part_scores, SCORE_TRESHOLD)
 
+    detected_body_part_set = pointMath.generate_boolean_scores(body_part_scores, SCORE_TRESHOLD)
     percentages = {
         'face': float(face), 
         'torso': float(torso), 
@@ -207,12 +195,10 @@ def advanced_weight_loss():
         'lowerLeg': float(lowerLegs)
     }
     print(f'face {float(face)} torso {float(torso)} upperLegs {float(upperLegs)} hips {float(hips)}  Arms {float(arms)} lowerLeg {float(lowerLegs)}')
-    
     body = Body(body_parts, detected_body_part_set, percentages, image, True)
     body.warpAllDetectedParts()
     body.save(cropImage=False)
     edited_filepath = os.path.join(UPLOAD_FOLDER, "edited.png")
-
     return send_file(edited_filepath, mimetype='image/png')
 
 
