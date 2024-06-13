@@ -9,17 +9,23 @@
   color: white;
 }
 
+.App-title {
+  margin-top: 20px;
+  font-size: 48px; /* Increased font size for the header */
+}
+
 .controls {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   margin-top: 20px;
+  justify-content: center;
 }
 
 .content {
   display: flex;
   align-items: flex-start;
   margin-top: 20px;
+  justify-content: center;
+  position: relative; /* Added for absolute positioning of BMI and Advanced sections */
 }
 
 .left-section {
@@ -27,13 +33,6 @@
   flex-direction: column;
   align-items: center;
   margin-right: 20px;
-}
-
-.file-input {
-  margin-top: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
 }
 
 .image-container {
@@ -60,12 +59,16 @@
 
 .button-group {
   display: flex;
-  flex-direction: column;
-  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap; /* Allow buttons to wrap to the next line if needed */
+  position: absolute;
+  top: 0; /* Align with top of the content */
+  left: -200px; /* Adjust position to left of the left rectangle */
 }
 
-.toggle-button, .new-button, .calculate-button, .submit-button, .show-all-button {
-  margin-top: 10px;
+.toggle-button, .new-button, .calculate-button, .submit-button, .show-all-button, .reset-button {
+  margin: 10px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -73,28 +76,30 @@
   border: none;
   border-radius: 5px;
   color: white;
+}
+
+.file-input {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent; /* Make background transparent */
+  color: white; /* Make text white */
 }
 
 .toggle-button.active, .new-button.active {
   background-color: #ff5733;
 }
 
-.reset-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  background-color: #61dafb;
-  border: none;
-  border-radius: 5px;
-  color: white;
-}
-
-.bmi-section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 20px;
+.bmi-section, .advanced-section {
+  position: absolute;
+  left: -350px; /* Position to the left of the left rectangle */
+  top: 100px; /* Adjust the top position to prevent overlap */
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .bmi-form {
@@ -176,13 +181,6 @@
   width: 400px;
   height: 600px;
   margin-right: 20px;
-}
-
-.advanced-section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 20px;
 }
 
 .advanced-section .input-group {

@@ -132,7 +132,7 @@ function App() {
   const generateWeightLossData = () => {
     const data = [];
     let currentWeight = parseFloat(weight);
-
+  
     const decreasePercentages = {
       torso: 0.04,
       hipAndThigh: 0.02,
@@ -140,34 +140,45 @@ function App() {
       faceAndNeck: 0.01,
       arms: 0.005
     };
-
+  
     const months = [1, 3, 6, 12, 15, 18, 24];
-
-    const getCumulativeLoss = (initialWeight, percentage, period) => {
-      return (initialWeight * percentage * period).toFixed(2);
+  
+    // Initialize cumulative losses
+    let cumulativeLosses = {
+      torso: 0,
+      hipAndThigh: 0,
+      legs: 0,
+      faceAndNeck: 0,
+      arms: 0
     };
-
+  
     for (const month of months) {
       if (calculateBmi(currentWeight) <= desiredBmi) break;
-
-      const period = month === 1 ? 1 : month / 3;
-
+  
+      // Add the initial percentages to the cumulative losses
+      cumulativeLosses.torso += decreasePercentages.torso;
+      cumulativeLosses.hipAndThigh += decreasePercentages.hipAndThigh;
+      cumulativeLosses.legs += decreasePercentages.legs;
+      cumulativeLosses.faceAndNeck += decreasePercentages.faceAndNeck;
+      cumulativeLosses.arms += decreasePercentages.arms;
+  
       data.push({
         month: `${month}th`,
-        torso: getCumulativeLoss(weight, decreasePercentages.torso, period),
-        hipAndThigh: getCumulativeLoss(weight, decreasePercentages.hipAndThigh, period),
-        legs: getCumulativeLoss(weight, decreasePercentages.legs, period),
-        faceAndNeck: getCumulativeLoss(weight, decreasePercentages.faceAndNeck, period),
-        arms: getCumulativeLoss(weight, decreasePercentages.arms, period),
+        torso: cumulativeLosses.torso.toFixed(2),
+        hipAndThigh: cumulativeLosses.hipAndThigh.toFixed(2),
+        legs: cumulativeLosses.legs.toFixed(2),
+        faceAndNeck: cumulativeLosses.faceAndNeck.toFixed(2),
+        arms: cumulativeLosses.arms.toFixed(2),
         totalWeight: currentWeight.toFixed(2),
         bmi: calculateBmi(currentWeight),
       });
       currentWeight *= 0.9;
     }
-
+  
     setWeightLossData(data);
     setShowTable(true);
   };
+  
 
   const handleCalculateBmi = () => {
     const bmiValue = calculateBmi(parseFloat(weight));
@@ -277,7 +288,22 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <h1 className="App-title">Body Weight Loss Simulator</h1>
         <div className="controls">
+          <button
+            onClick={() => handleButtonClick('button1')}
+            className={`toggle-button ${activeButton === 'button1' ? 'active' : ''}`}
+            disabled={activeButton && activeButton !== 'button1'}
+          >
+            BMI
+          </button>
+          <button
+            onClick={() => handleButtonClick('button2')}
+            className={`new-button ${activeButton === 'button2' ? 'active' : ''}`}
+            disabled={activeButton && activeButton !== 'button2'}
+          >
+            Advanced
+          </button>
           <input
             type="file"
             onChange={handleImageUpload}
@@ -302,91 +328,36 @@ function App() {
                 />
               )}
             </div>
-            <div className="button-group">
-              <button
-                onClick={() => handleButtonClick('button1')}
-                className={`toggle-button ${activeButton === 'button1' ? 'active' : ''}`}
-                disabled={activeButton && activeButton !== 'button1'}
-              >
-                BMI
-              </button>
-              <button
-                onClick={() => handleButtonClick('button2')}
-                className={`new-button ${activeButton === 'button2' ? 'active' : ''}`}
-                disabled={activeButton && activeButton !== 'button2'}
-              >
-                Advanced
-              </button>
-            </div>
             {activeButton === 'button1' && (
-              <>
-                <div className="bmi-section">
-                  <div className="bmi-form">
-                    <h3>Calculate Your BMI</h3>
-                    <input
-                      type="number"
-                      placeholder="Height (cm)"
-                      value={height}
-                      onChange={handleHeightChange}
-                    />
-                    <input
-                      type="number"
-                      placeholder="Weight (kg)"
-                      value={weight}
-                      onChange={handleWeightChange}
-                    />
-                    <input
-                      type="number"
-                      placeholder="Desired BMI"
-                      value={desiredBmi}
-                      onChange={handleDesiredBmiChange}
-                    />
-                    <button onClick={handleCalculateBmi} className="calculate-button">Calculate</button>
-                    {bmi && (
-                      <div className="bmi-result">
-                        <h4>Your BMI: {bmi}</h4>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                {showTable && (
-                  <>
-                    <div className="bmi-table">
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Month</th>
-                            <th>Torso</th>
-                            <th>Hip and Thigh</th>
-                            <th>Legs</th>
-                            <th>Face and Neck</th>
-                            <th>Arms</th>
-                            <th>Total Weight</th>
-                            <th>BMI</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {weightLossData.map((row, index) => (
-                            <tr key={index}>
-                              <td>{row.month}</td>
-                              <td>{row.torso}</td>
-                              <td>{row.hipAndThigh}</td>
-                              <td>{row.legs}</td>
-                              <td>{row.faceAndNeck}</td>
-                              <td>{row.arms}</td>
-                              <td>{row.totalWeight}</td>
-                              <td>{row.bmi}</td>
-                              <td><button onClick={() => handleShowClick(row.month)}>Show</button></td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
+              <div className="bmi-section">
+                <div className="bmi-form">
+                  <h3>Calculate Your BMI</h3>
+                  <input
+                    type="number"
+                    placeholder="Height (cm)"
+                    value={height}
+                    onChange={handleHeightChange}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Weight (kg)"
+                    value={weight}
+                    onChange={handleWeightChange}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Desired BMI"
+                    value={desiredBmi}
+                    onChange={handleDesiredBmiChange}
+                  />
+                  <button onClick={handleCalculateBmi} className="calculate-button">Calculate</button>
+                  {bmi && (
+                    <div className="bmi-result">
+                      <h4>Your BMI: {bmi}</h4>
                     </div>
-                    <button onClick={handleShowAllClick} className="show-all-button">Show All</button>
-                  </>
-                )}
-              </>
+                  )}
+                </div>
+              </div>
             )}
             {activeButton === 'button2' && (
               <div className="advanced-section">
@@ -467,9 +438,45 @@ function App() {
             </div>
           </div>
         </div>
+        {showTable && (
+          <>
+            <div className="bmi-table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th>Torso</th>
+                    <th>Hip and Thigh</th>
+                    <th>Legs</th>
+                    <th>Face and Neck</th>
+                    <th>Arms</th>
+                    <th>Total Weight</th>
+                    <th>BMI</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {weightLossData.map((row, index) => (
+                    <tr key={index}>
+                      <td>{row.month}</td>
+                      <td>{row.torso}</td>
+                      <td>{row.hipAndThigh}</td>
+                      <td>{row.legs}</td>
+                      <td>{row.faceAndNeck}</td>
+                      <td>{row.arms}</td>
+                      <td>{row.totalWeight}</td>
+                      <td>{row.bmi}</td>
+                      <td><button onClick={() => handleShowClick(row.month)}>Show</button></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <button onClick={handleShowAllClick} className="show-all-button">Show All</button>
+          </>
+        )}
       </header>
     </div>
   );
 }
-
 export default App;
